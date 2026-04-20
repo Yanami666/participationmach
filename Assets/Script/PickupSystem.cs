@@ -10,54 +10,55 @@ public class PickupSystem : MonoBehaviour
     [SerializeField] private Transform playerCamera;
     [SerializeField] private Transform holdPoint;
 
-    [Header("Interaction / 交互")]
+    [Header("Raycast Settings / 射线设置")]
     [SerializeField] private float interactRange = 3f;
     [SerializeField] private LayerMask interactableLayer = ~0;
 
+    [Header("Throw Settings / 扔出设置")]
+    [SerializeField] private float throwForceMultiplier = 1f;
+
+    [Header("Placement Settings / 放置设置")]
+    [SerializeField] private float placeRange = 3f;
+    [SerializeField] private LayerMask placeableLayer = ~0;
+
     [Header("UI / 界面")]
     [SerializeField] private Image crosshairImage;
-    [SerializeField] private Color crosshairDefault = Color.white;
-    [SerializeField] private Color crosshairHighlight = new Color(1f, 0.85f, 0.1f);
-    [SerializeField] private float crosshairSize = 8f;
     [SerializeField] private TextMeshProUGUI interactPromptText;
+    [SerializeField] private Color crosshairDefault = Color.white;
+    [SerializeField] private Color crosshairHighlight = Color.yellow;
+    [SerializeField] private Color crosshairPlace = Color.green;
 
-    [Header("Place / 放置")]
-    [SerializeField] private float placeRange = 5f;
-    [SerializeField] private LayerMask placementLayer = ~0;
-    [SerializeField] private float placementHeightOffset = 0.05f;
+    [Header("Tool Mode / 工具模式")]
+    [SerializeField] private string handToolName = "Hand";
 
     [Header("Input / 输入")]
     [SerializeField] private InputActionAsset inputActions;
 
-    private PickableItem _heldItem;
-    private PickableItem _lookedAtItem;
-    private bool _canPlace;
-    private UnityEngine.Vector3 _placePosition;
-    private UnityEngine.Vector3 _placeNormal;
-
     private InputAction _pickupAction;
-    private InputAction _placeAction;
+    private InputAction _throwAction;
+
+    private PickableItem _lookedAtItem = null;
+    private PickableItem _heldItem = null;
+    private bool _canPlace = false;
+    private RaycastHit _placeHit;
+
+    private bool _handModeActive = true;
 
     private void Awake()
     {
-        if (inputActions == null)
+        if (inputActions != null)
+        {
+            var map = inputActions.FindActionMap("Player", throwIfNotFound: true);
+            _pickupAction = map.FindAction("Pickup", throwIfNotFound: true);
+            _throwAction = map.FindAction("Clean", throwIfNotFound: true);
+        }
+        else
         {
             UnityEngine.Debug.LogError("[PickupSystem] InputActionAsset not assigned!");
-            return;
         }
 
-        var map = inputActions.FindActionMap("Player", throwIfNotFound: true);
-        _pickupAction = map.FindAction("Pickup", throwIfNotFound: true);
-        _placeAction = map.FindAction("Throw", throwIfNotFound: true);
-
-        _pickupAction.performed += _ => TryPickup();
-        _placeAction.performed += _ => TryPlace();
-
-        if (crosshairImage != null)
-        {
-            crosshairImage.rectTransform.sizeDelta = UnityEngine.Vector2.one * crosshairSize;
-            crosshairImage.color = crosshairDefault;
-        }
+        if (playerCamera == null && Camera.main != null)
+            playerCamera = Camera.main.transform;
     }
 
     private void Start()
@@ -68,118 +69,160 @@ public class PickupSystem : MonoBehaviour
     private void OnEnable()
     {
         _pickupAction?.Enable();
-        _placeAction?.Enable();
+        _throwAction?.Enable();
     }
 
     private void OnDisable()
     {
         _pickupAction?.Disable();
-        _placeAction?.Disable();
+        _throwAction?.Disable();
+    }
+
+    private void OnDestroy()
+    {
         RadialMenuSystem.OnToolSelected -= HandleToolSelected;
     }
 
     private void HandleToolSelected(int index, string toolName)
     {
-        // 取消选中工具时（index -1），放下持有的物体
-        if (index < 0 && _heldItem != null)
-            DropItem();
+        _handModeActive = (toolName == handToolName);
+
+        if (!_handModeActive && _heldItem != null)
+        {
+            DropItem(isThrow: false);
+        }
     }
 
+    public void ForceDropHeldItem()
+    {
+        if (_heldItem == null) return;
+        DropItem(isThrow: false);
+    }
+
+    // ── Update ────────────────────────────────────────────────────────────────
     private void Update()
     {
-        PerformRaycast();
-        UpdateCrosshair();
+        UpdateRaycast();
+        UpdateCrosshairUI();
+        HandleInput();
     }
 
-    private void PerformRaycast()
+    private void HandleInput()
+    {
+        if (!_handModeActive) return;
+
+        // Pickup (E)
+        if (_pickupAction != null && _pickupAction.WasPressedThisFrame())
+        {
+            if (_heldItem == null && _lookedAtItem != null)
+                PickupItem(_lookedAtItem);
+        }
+
+        // Throw / Place (LMB)
+        if (_throwAction != null && _throwAction.WasPressedThisFrame())
+        {
+            if (_heldItem != null)
+            {
+                if (_canPlace) PlaceItem();
+                else DropItem(isThrow: true);
+            }
+        }
+    }
+
+    private void UpdateRaycast()
     {
         if (playerCamera == null) return;
 
         _lookedAtItem = null;
         _canPlace = false;
 
+        if (!_handModeActive)
+        {
+            HidePrompt();
+            return;
+        }
+
         Ray ray = new Ray(playerCamera.position, playerCamera.forward);
 
-        if (_heldItem != null)
+        if (_heldItem == null)
         {
-            if (Physics.Raycast(ray, out RaycastHit placeHit, placeRange, placementLayer,
+            if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayer,
                                 QueryTriggerInteraction.Ignore))
             {
-                if (placeHit.collider.GetComponentInParent<PickableItem>() != _heldItem)
+                PickableItem item = hit.collider.GetComponentInParent<PickableItem>();
+                if (item != null && !item.IsHeld)
                 {
-                    _canPlace = true;
-                    _placePosition = placeHit.point + placeHit.normal * placementHeightOffset;
-                    _placeNormal = placeHit.normal;
-                    ShowPrompt("[LMB] Place");
+                    _lookedAtItem = item;
+                    ShowPrompt(item.InteractPrompt);
+                }
+                else
+                {
+                    HidePrompt();
                 }
             }
             else
             {
-                ShowPrompt("[LMB] Drop");
-            }
-            return;
-        }
-
-        if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayer,
-                            QueryTriggerInteraction.Ignore))
-        {
-            PickableItem item = hit.collider.GetComponentInParent<PickableItem>();
-            if (item != null && !item.IsHeld)
-            {
-                _lookedAtItem = item;
-                ShowPrompt(item.InteractPrompt);
-                return;
+                HidePrompt();
             }
         }
-
-        HidePrompt();
-    }
-
-    private void TryPickup()
-    {
-        if (_heldItem != null || _lookedAtItem == null) return;
-        _lookedAtItem.OnPickedUp(holdPoint);
-        _heldItem = _lookedAtItem;
-        _lookedAtItem = null;
-        HidePrompt();
-    }
-
-    private void TryPlace()
-    {
-        if (_heldItem == null) return;
-
-        if (_canPlace)
-            _heldItem.OnPlaced(_placePosition, _placeNormal);
         else
-            _heldItem.OnDropped(playerCamera.forward, isThrow: false);
+        {
+            if (Physics.Raycast(ray, out RaycastHit hit, placeRange, placeableLayer,
+                                QueryTriggerInteraction.Ignore))
+            {
+                _placeHit = hit;
+                _canPlace = true;
+                ShowPrompt("[LMB] Place  /  [RMB] Tool menu");
+            }
+            else
+            {
+                ShowPrompt("[LMB] Throw  /  [RMB] Tool menu");
+            }
+        }
+    }
 
-        _heldItem = null;
-        _canPlace = false;
+    private void PickupItem(PickableItem item)
+    {
+        item.OnPickedUp(holdPoint);
+        _heldItem = item;
         HidePrompt();
     }
 
-    private void DropItem()
+    private void PlaceItem()
     {
         if (_heldItem == null) return;
-        _heldItem.OnDropped(playerCamera != null ? playerCamera.forward : transform.forward, isThrow: false);
+
+        _heldItem.OnPlaced(_placeHit.point, _placeHit.normal);
         _heldItem = null;
-        _canPlace = false;
-        HidePrompt();
     }
 
-    private void UpdateCrosshair()
+    private void DropItem(bool isThrow)
+    {
+        if (_heldItem == null) return;
+
+        UnityEngine.Vector3 throwDir = playerCamera != null
+            ? playerCamera.forward * throwForceMultiplier
+            : transform.forward;
+
+        _heldItem.OnDropped(throwDir, isThrow);
+        _heldItem = null;
+    }
+
+    private void UpdateCrosshairUI()
     {
         if (crosshairImage == null) return;
 
         Color targetColor;
-        if (_heldItem != null)
-            targetColor = _canPlace ? new Color(0.1f, 1f, 0.4f) : crosshairDefault;
+        if (!_handModeActive)
+            targetColor = crosshairDefault;
+        else if (_heldItem != null)
+            targetColor = _canPlace ? crosshairPlace : crosshairDefault;
         else
             targetColor = _lookedAtItem != null ? crosshairHighlight : crosshairDefault;
 
         crosshairImage.color = targetColor;
 
-        float targetScale = (_lookedAtItem != null || _canPlace) ? 1.4f : 1f;
+        float targetScale = (_handModeActive && (_lookedAtItem != null || _canPlace)) ? 1.4f : 1f;
         float currentScale = crosshairImage.rectTransform.localScale.x;
         float newScale = Mathf.Lerp(currentScale, targetScale, Time.deltaTime * 10f);
         crosshairImage.rectTransform.localScale = UnityEngine.Vector3.one * newScale;
@@ -200,13 +243,5 @@ public class PickupSystem : MonoBehaviour
 
     public bool IsHoldingItem => _heldItem != null;
     public PickableItem HeldItem => _heldItem;
-
-    public void ForceDropHeldItem() => DropItem();
-
-    private void OnDrawGizmosSelected()
-    {
-        if (playerCamera == null) return;
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawRay(playerCamera.position, playerCamera.forward * interactRange);
-    }
+    public bool IsHandMode => _handModeActive;
 }

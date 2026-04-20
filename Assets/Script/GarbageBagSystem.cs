@@ -15,7 +15,7 @@ public class GarbageBagSystem : MonoBehaviour
     [SerializeField] private string trashTag = "Trash";
     [SerializeField] private string trashBagToolName = "Garbage Bag";
 
-    [Header("Feedback / 反馈（可选）")]
+    [Header("Feedback / 反馈(可选)")]
     [SerializeField] private AudioClip collectSFX;
     [SerializeField] private AudioSource audioSource;
 
@@ -33,9 +33,6 @@ public class GarbageBagSystem : MonoBehaviour
         {
             var map = inputActions.FindActionMap("Player", throwIfNotFound: true);
             _collectAction = map.FindAction("Clean", throwIfNotFound: true);
-
-            _collectAction.performed += OnCollectPressed;
-            UnityEngine.Debug.Log("[GarbageBagSystem] Input action 'Clean' bound successfully.");
         }
         else
         {
@@ -55,7 +52,6 @@ public class GarbageBagSystem : MonoBehaviour
     private void Start()
     {
         RadialMenuSystem.OnToolSelected += HandleToolSelected;
-        UnityEngine.Debug.Log("[GarbageBagSystem] Subscribed to RadialMenuSystem.OnToolSelected.");
     }
 
     private void OnEnable() => _collectAction?.Enable();
@@ -64,49 +60,34 @@ public class GarbageBagSystem : MonoBehaviour
     private void OnDestroy()
     {
         RadialMenuSystem.OnToolSelected -= HandleToolSelected;
-        if (_collectAction != null)
-            _collectAction.performed -= OnCollectPressed;
     }
 
     private void HandleToolSelected(int index, string toolName)
     {
         _trashBagSelected = (toolName == trashBagToolName);
 
-        UnityEngine.Debug.Log($"[GarbageBagSystem] Tool selected: '{toolName}' | Expected: '{trashBagToolName}' | Match: {_trashBagSelected}");
-
         if (trashBagViewModel != null)
             trashBagViewModel.SetActive(_trashBagSelected);
     }
 
-    private void OnCollectPressed(InputAction.CallbackContext ctx)
+    private void Update()
     {
-        UnityEngine.Debug.Log($"[GarbageBagSystem] LMB pressed. TrashBagSelected = {_trashBagSelected}");
+        if (!_trashBagSelected) return;
+        if (_collectAction == null) return;
 
-        if (!_trashBagSelected)
-        {
-            UnityEngine.Debug.Log("[GarbageBagSystem] Trash bag NOT selected, skipping.");
-            return;
-        }
-
-        TryCollectTrash();
+        if (_collectAction.WasPressedThisFrame())
+            TryCollectTrash();
     }
 
     private void TryCollectTrash()
     {
-        if (playerCamera == null)
-        {
-            UnityEngine.Debug.LogError("[GarbageBagSystem] playerCamera is null!");
-            return;
-        }
+        if (playerCamera == null) return;
 
         Ray ray = new Ray(playerCamera.position, playerCamera.forward);
-        UnityEngine.Debug.DrawRay(ray.origin, ray.direction * collectRange, Color.red, 2f);
 
         if (Physics.Raycast(ray, out RaycastHit hit, collectRange, trashLayer,
                             QueryTriggerInteraction.Ignore))
         {
-            UnityEngine.Debug.Log($"[GarbageBagSystem] Ray hit: {hit.collider.name} | Tag: {hit.collider.tag}");
-
             if (hit.collider.CompareTag(trashTag) ||
                 (hit.collider.transform.parent != null && hit.collider.transform.parent.CompareTag(trashTag)))
             {
@@ -116,14 +97,6 @@ public class GarbageBagSystem : MonoBehaviour
 
                 CollectTrash(trashRoot.gameObject);
             }
-            else
-            {
-                UnityEngine.Debug.Log($"[GarbageBagSystem] Hit object does NOT have tag '{trashTag}'.");
-            }
-        }
-        else
-        {
-            UnityEngine.Debug.Log($"[GarbageBagSystem] Ray hit nothing within {collectRange}m.");
         }
     }
 

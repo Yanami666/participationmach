@@ -77,40 +77,39 @@ public class SqueegeSystem : MonoBehaviour
         if (nearGlass && squeegeViewModel != null)
         {
             UnityEngine.Vector3 targetPos = lastHit.point + lastHit.normal * surfaceOffset;
-            UnityEngine.Quaternion baseRot = UnityEngine.Quaternion.LookRotation(-lastHit.normal, playerCamera.transform.up);
+            UnityEngine.Quaternion baseRot = UnityEngine.Quaternion.LookRotation(
+                -lastHit.normal, playerCamera.transform.up);
             UnityEngine.Quaternion targetRot = baseRot * UnityEngine.Quaternion.Euler(0f, 180f, 0f);
 
             squeegeViewModel.transform.position = UnityEngine.Vector3.Lerp(
                 squeegeViewModel.transform.position,
                 targetPos,
-                Time.deltaTime * followSpeed
-            );
+                Time.deltaTime * followSpeed);
+
             squeegeViewModel.transform.rotation = UnityEngine.Quaternion.Slerp(
                 squeegeViewModel.transform.rotation,
                 targetRot,
-                Time.deltaTime * followSpeed
-            );
+                Time.deltaTime * followSpeed);
         }
         else if (squeegeViewModel != null)
         {
             squeegeViewModel.transform.localPosition = UnityEngine.Vector3.Lerp(
                 squeegeViewModel.transform.localPosition,
                 defaultLocalPos,
-                Time.deltaTime * followSpeed
-            );
+                Time.deltaTime * followSpeed);
+
             squeegeViewModel.transform.localRotation = UnityEngine.Quaternion.Slerp(
                 squeegeViewModel.transform.localRotation,
                 defaultLocalRot,
-                Time.deltaTime * followSpeed
-            );
+                Time.deltaTime * followSpeed);
         }
 
         if (!nearGlass) return;
         if (_cleanAction == null) return;
 
         bool isHolding = _cleanAction.IsPressed();
-
-        float lookDelta = UnityEngine.Vector3.Angle(playerCamera.transform.forward, lastCameraForward);
+        float lookDelta = UnityEngine.Vector3.Angle(
+            playerCamera.transform.forward, lastCameraForward);
         bool isMoving = lookDelta > 0.01f;
         lastCameraForward = playerCamera.transform.forward;
 
@@ -120,8 +119,7 @@ public class SqueegeSystem : MonoBehaviour
                 lastHit.point,
                 cleanRadius,
                 UnityEngine.Physics.AllLayers,
-                QueryTriggerInteraction.Collide
-            );
+                QueryTriggerInteraction.Collide);
 
             foreach (var col in hits)
             {
@@ -142,6 +140,7 @@ public class SqueegeSystem : MonoBehaviour
             squeegeViewModel.SetActive(isGlass);
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (playerCamera == null) return;
@@ -161,4 +160,5 @@ public class SqueegeSystem : MonoBehaviour
             Gizmos.DrawLine(origin, origin + direction * cleanRange);
         }
     }
+#endif
 }

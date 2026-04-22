@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 3
   tags:
   - Trash
+  - Glass
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Glass
   - Water
   - UI
   - 

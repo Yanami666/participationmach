@@ -115,17 +115,14 @@ public class SqueegeSystem : MonoBehaviour
 
         if (isHolding && isMoving)
         {
-            Collider[] hits = UnityEngine.Physics.OverlapSphere(
-                lastHit.point,
-                cleanRadius,
-                UnityEngine.Physics.AllLayers,
-                QueryTriggerInteraction.Collide);
-
-            foreach (var col in hits)
+            DirtDecal[] decals = lastHit.collider.GetComponentsInChildren<DirtDecal>();
+            foreach (var dirt in decals)
             {
-                DirtDecal dirt = col.GetComponent<DirtDecal>();
-                if (dirt != null)
-                    dirt.RemoveInstant();
+                if (dirt == null) continue;
+                float dist = UnityEngine.Vector3.Distance(
+                    dirt.transform.position, lastHit.point);
+                if (dist < cleanRadius)
+                    dirt.StartFading();
             }
         }
     }

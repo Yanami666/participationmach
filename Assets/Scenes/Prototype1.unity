@@ -4728,8 +4728,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SqueegeSystem
   squeegeViewModel: {fileID: 1708874284}
   playerCamera: {fileID: 1167458305}
+  inputActions: {fileID: -944628639613478452, guid: 7754895374f41407dae5dc041412f66b, type: 3}
   cleanRange: 2.5
   cleanRadius: 0.3
+  followSpeed: 20
+  surfaceOffset: 0.05
   glassLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -6875,7 +6878,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2564762152735583422, guid: b2c6625cc08ef41df8276b56b6fafccd, type: 3}
       propertyPath: fadeSpeed
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7657629854872589881, guid: b2c6625cc08ef41df8276b56b6fafccd, type: 3}
       propertyPath: m_Name

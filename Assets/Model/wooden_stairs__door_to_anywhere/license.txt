@@ -1,0 +1,11 @@
+Model Information:
+* title:	Wooden Stairs & Door to Anywhere
+* source:	https://sketchfab.com/3d-models/wooden-stairs-door-to-anywhere-8bb751a5128448998bd37ce1b94e73f0
+* author:	JeffK (https://sketchfab.com/jeffkolada)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Wooden Stairs & Door to Anywhere" (https://sketchfab.com/3d-models/wooden-stairs-door-to-anywhere-8bb751a5128448998bd37ce1b94e73f0) by JeffK (https://sketchfab.com/jeffkolada) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Kitchen
+* source:	https://sketchfab.com/3d-models/kitchen-81751241cd5a4ebc805c8eb100e8b50c
+* author:	Montassar-f (https://sketchfab.com/Montassar-f)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Kitchen" (https://sketchfab.com/3d-models/kitchen-81751241cd5a4ebc805c8eb100e8b50c) by Montassar-f (https://sketchfab.com/Montassar-f) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

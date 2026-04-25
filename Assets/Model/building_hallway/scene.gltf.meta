@@ -1,0 +1,100 @@
+fileFormatVersion: 2
+guid: ad14d5229477efa49a9c64780e075f62
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 715df9372183c47e389bb6e19fbc3b52, type: 3}
+  editorImportSettings:
+    generateSecondaryUVSet: 0
+  importSettings:
+    nodeNameMethod: 1
+    animationMethod: 2
+    generateMipMaps: 1
+    texturesReadable: 0
+    defaultMinFilterMode: 9729
+    defaultMagFilterMode: 9729
+    anisotropicFilterLevel: 1
+  instantiationSettings:
+    mask: -1
+    layer: 0
+    skinUpdateWhenOffscreen: 1
+    lightIntensityFactor: 1
+    sceneObjectCreation: 2
+  assetDependencies:
+  - type: 0
+    originalUri: Assets\Model\building_hallway\scene.bin
+    assetPath: Assets\Model\building_hallway\scene.bin
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\Wallpaper_baseColor.jpeg
+    assetPath: Assets\Model\building_hallway\textures\Wallpaper_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\Wallpaper_metallicRoughness.png
+    assetPath: Assets\Model\building_hallway\textures\Wallpaper_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\Wallpaper_normal.png
+    assetPath: Assets\Model\building_hallway\textures\Wallpaper_normal.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\planks_baseColor.jpeg
+    assetPath: Assets\Model\building_hallway\textures\planks_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\planks_metallicRoughness.png
+    assetPath: Assets\Model\building_hallway\textures\planks_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\planks_normal.png
+    assetPath: Assets\Model\building_hallway\textures\planks_normal.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\Wood_baseColor.jpeg
+    assetPath: Assets\Model\building_hallway\textures\Wood_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\Wood_metallicRoughness.png
+    assetPath: Assets\Model\building_hallway\textures\Wood_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\Wood_normal.png
+    assetPath: Assets\Model\building_hallway\textures\Wood_normal.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\plaster_baseColor.jpeg
+    assetPath: Assets\Model\building_hallway\textures\plaster_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\plaster_metallicRoughness.png
+    assetPath: Assets\Model\building_hallway\textures\plaster_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\plaster_normal.jpeg
+    assetPath: Assets\Model\building_hallway\textures\plaster_normal.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\carpet_baseColor.jpeg
+    assetPath: Assets\Model\building_hallway\textures\carpet_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\carpet_metallicRoughness.png
+    assetPath: Assets\Model\building_hallway\textures\carpet_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\carpet_normal.jpeg
+    assetPath: Assets\Model\building_hallway\textures\carpet_normal.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\material_baseColor.jpeg
+    assetPath: Assets\Model\building_hallway\textures\material_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\ceiling_baseColor.jpeg
+    assetPath: Assets\Model\building_hallway\textures\ceiling_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\ceiling_metallicRoughness.png
+    assetPath: Assets\Model\building_hallway\textures\ceiling_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\ceiling_normal.png
+    assetPath: Assets\Model\building_hallway\textures\ceiling_normal.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\Door_baseColor.jpeg
+    assetPath: Assets\Model\building_hallway\textures\Door_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\Door_metallicRoughness.png
+    assetPath: Assets\Model\building_hallway\textures\Door_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\Door_normal.jpeg
+    assetPath: Assets\Model\building_hallway\textures\Door_normal.jpeg
+  - type: 1
+    originalUri: Assets\Model\building_hallway\textures\doorKnob_baseColor.jpeg
+    assetPath: Assets\Model\building_hallway\textures\doorKnob_baseColor.jpeg
+  reportItems: []

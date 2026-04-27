@@ -4820,6 +4820,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9e69055fa182144cdb65fff6753a0a34, type: 3}
       insertIndex: -1
       addedObject: {fileID: 904945363}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9e69055fa182144cdb65fff6753a0a34, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 904945365}
   m_SourcePrefab: {fileID: 100100000, guid: 9e69055fa182144cdb65fff6753a0a34, type: 3}
 --- !u!1 &904945359 stripped
 GameObject:
@@ -4909,6 +4912,91 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &904945365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904945359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84726ef0920e04d288b2d29c0f34d6d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TPConditionTracker
+  targetTrigger: {fileID: 968009889}
+  conditionType: 0
+  moveThreshold: 0.5
+--- !u!1 &968009886
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 968009888}
+  - component: {fileID: 968009887}
+  - component: {fileID: 968009889}
+  m_Layer: 0
+  m_Name: TPtrigger1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &968009887
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968009886}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.1635218, y: 1, z: 1}
+  m_Center: {x: 0.5817609, y: 0, z: 0}
+--- !u!4 &968009888
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968009886}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.40482, y: 1.34, z: -7.27}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &968009889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968009886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb5a8878f6d047d68a6aa6efcfe9956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TPTrigger
+  targetSceneName: 
+  targetPoint: {fileID: 1245436500}
+  spawnPointTag: SpawnPoint
+  showGizmo: 1
 --- !u!1 &985294680
 GameObject:
   m_ObjectHideFlags: 0
@@ -5283,7 +5371,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1000, y: 1000}
+  m_SizeDelta: {x: 900, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1069505021
 MonoBehaviour:
@@ -5305,7 +5393,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 2dc21cefb8dc3413ca2906c5170d7894, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5863,6 +5951,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
   m_Asset: {fileID: -944628639613478452, guid: 7754895374f41407dae5dc041412f66b, type: 3}
   m_ActionId: 182ec554-7243-470a-85bc-828f83c2dfdb
+--- !u!1 &1245436499
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1245436500}
+  - component: {fileID: 1245436501}
+  m_Layer: 0
+  m_Name: TPtrigger2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1245436500
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245436499}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.40482, y: 1.34, z: 8.96}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1245436501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245436499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16e5ca1cdceaa4ac58fac66a536653fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawnPoint
 --- !u!1 &1290556091
 GameObject:
   m_ObjectHideFlags: 0
@@ -6735,6 +6867,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.0000002, z: 0.049731955}
   m_Center: {x: 0, y: -0.00000047683716, z: -0.024669712}
+--- !u!114 &1826614513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826614506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84726ef0920e04d288b2d29c0f34d6d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TPConditionTracker
+  targetTrigger: {fileID: 968009889}
+  conditionType: 1
+  moveThreshold: 0.5
 --- !u!1 &1838726498
 GameObject:
   m_ObjectHideFlags: 0
@@ -7308,6 +7455,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7657629854872589881, guid: b2c6625cc08ef41df8276b56b6fafccd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1826614512}
+    - targetCorrespondingSourceObject: {fileID: 7657629854872589881, guid: b2c6625cc08ef41df8276b56b6fafccd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1826614513}
   m_SourcePrefab: {fileID: 100100000, guid: b2c6625cc08ef41df8276b56b6fafccd, type: 3}
 --- !u!1 &1905655981
 GameObject:
@@ -8115,3 +8265,5 @@ SceneRoots:
   - {fileID: 577934396}
   - {fileID: 719423158}
   - {fileID: 904945358}
+  - {fileID: 968009888}
+  - {fileID: 1245436500}

@@ -87,9 +87,11 @@ public class PickupSystem : MonoBehaviour
     {
         _handModeActive = (toolName == handToolName);
 
-        if (!_handModeActive && _heldItem != null)
+        if (!_handModeActive)
         {
-            DropItem(isThrow: false);
+            HidePrompt(); // 切走时清掉 hand 的提示，交给其他系统接管
+            if (_heldItem != null)
+                DropItem(isThrow: false);
         }
     }
 
@@ -111,14 +113,12 @@ public class PickupSystem : MonoBehaviour
     {
         if (!_handModeActive) return;
 
-        // Pickup (E)
         if (_pickupAction != null && _pickupAction.WasPressedThisFrame())
         {
             if (_heldItem == null && _lookedAtItem != null)
                 PickupItem(_lookedAtItem);
         }
 
-        // Throw / Place (LMB)
         if (_throwAction != null && _throwAction.WasPressedThisFrame())
         {
             if (_heldItem != null)
@@ -138,7 +138,7 @@ public class PickupSystem : MonoBehaviour
 
         if (!_handModeActive)
         {
-            HidePrompt();
+            // 不强制 HidePrompt，让其他系统自己管
             return;
         }
 
@@ -228,14 +228,14 @@ public class PickupSystem : MonoBehaviour
         crosshairImage.rectTransform.localScale = UnityEngine.Vector3.one * newScale;
     }
 
-    private void ShowPrompt(string message)
+    public void ShowPrompt(string message)
     {
         if (interactPromptText == null) return;
         interactPromptText.text = message;
         interactPromptText.enabled = true;
     }
 
-    private void HidePrompt()
+    public void HidePrompt()
     {
         if (interactPromptText == null) return;
         interactPromptText.enabled = false;

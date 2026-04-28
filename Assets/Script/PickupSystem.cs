@@ -4,29 +4,30 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
-public class PickupSystem : MonoBehaviour
+public class PickupSystem : UnityEngine.MonoBehaviour
 {
     [Header("References / 引用")]
-    [SerializeField] private Transform playerCamera;
-    [SerializeField] private Transform holdPoint;
+    [SerializeField] private UnityEngine.Transform playerCamera;
+    [SerializeField] private UnityEngine.Transform holdPoint;
+    [SerializeField] private ReadableItemSystem readableItemSystem;
 
     [Header("Raycast Settings / 射线设置")]
     [SerializeField] private float interactRange = 3f;
-    [SerializeField] private LayerMask interactableLayer = ~0;
+    [SerializeField] private UnityEngine.LayerMask interactableLayer = ~0;
 
     [Header("Throw Settings / 扔出设置")]
     [SerializeField] private float throwForceMultiplier = 1f;
 
     [Header("Placement Settings / 放置设置")]
     [SerializeField] private float placeRange = 3f;
-    [SerializeField] private LayerMask placeableLayer = ~0;
+    [SerializeField] private UnityEngine.LayerMask placeableLayer = ~0;
 
     [Header("UI / 界面")]
-    [SerializeField] private Image crosshairImage;
+    [SerializeField] private UnityEngine.UI.Image crosshairImage;
     [SerializeField] private TextMeshProUGUI interactPromptText;
-    [SerializeField] private Color crosshairDefault = Color.white;
-    [SerializeField] private Color crosshairHighlight = Color.yellow;
-    [SerializeField] private Color crosshairPlace = Color.green;
+    [SerializeField] private UnityEngine.Color crosshairDefault = UnityEngine.Color.white;
+    [SerializeField] private UnityEngine.Color crosshairHighlight = UnityEngine.Color.yellow;
+    [SerializeField] private UnityEngine.Color crosshairPlace = UnityEngine.Color.green;
 
     [Header("Tool Mode / 工具模式")]
     [SerializeField] private string handToolName = "Hand";
@@ -41,7 +42,6 @@ public class PickupSystem : MonoBehaviour
     private PickableItem _heldItem = null;
     private bool _canPlace = false;
     private RaycastHit _placeHit;
-
     private bool _handModeActive = true;
 
     private void Awake()
@@ -89,7 +89,7 @@ public class PickupSystem : MonoBehaviour
 
         if (!_handModeActive)
         {
-            HidePrompt(); // 切走时清掉 hand 的提示，交给其他系统接管
+            HidePrompt();
             if (_heldItem != null)
                 DropItem(isThrow: false);
         }
@@ -101,7 +101,6 @@ public class PickupSystem : MonoBehaviour
         DropItem(isThrow: false);
     }
 
-    // ── Update ────────────────────────────────────────────────────────────────
     private void Update()
     {
         UpdateRaycast();
@@ -137,16 +136,13 @@ public class PickupSystem : MonoBehaviour
         _canPlace = false;
 
         if (!_handModeActive)
-        {
-            // 不强制 HidePrompt，让其他系统自己管
             return;
-        }
 
         Ray ray = new Ray(playerCamera.position, playerCamera.forward);
 
         if (_heldItem == null)
         {
-            if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayer,
+            if (UnityEngine.Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayer,
                                 QueryTriggerInteraction.Ignore))
             {
                 PickableItem item = hit.collider.GetComponentInParent<PickableItem>();
@@ -167,16 +163,23 @@ public class PickupSystem : MonoBehaviour
         }
         else
         {
-            if (Physics.Raycast(ray, out RaycastHit hit, placeRange, placeableLayer,
+            // 判断拿着的物体是否可阅读，追加 [I] Read 提示
+            bool isReadable = readableItemSystem != null && readableItemSystem.HeldItemIsReadable;
+
+            if (UnityEngine.Physics.Raycast(ray, out RaycastHit hit, placeRange, placeableLayer,
                                 QueryTriggerInteraction.Ignore))
             {
                 _placeHit = hit;
                 _canPlace = true;
-                ShowPrompt("[LMB] Place  /  [RMB] Tool menu");
+                string prompt = "[LMB] Place  /  [RMB] Tool menu";
+                if (isReadable) prompt += "  /  [I] Read";
+                ShowPrompt(prompt);
             }
             else
             {
-                ShowPrompt("[LMB] Throw  /  [RMB] Tool menu");
+                string prompt = "[LMB] Throw  /  [RMB] Tool menu";
+                if (isReadable) prompt += "  /  [I] Read";
+                ShowPrompt(prompt);
             }
         }
     }
@@ -191,7 +194,6 @@ public class PickupSystem : MonoBehaviour
     private void PlaceItem()
     {
         if (_heldItem == null) return;
-
         _heldItem.OnPlaced(_placeHit.point, _placeHit.normal);
         _heldItem = null;
     }
@@ -212,7 +214,7 @@ public class PickupSystem : MonoBehaviour
     {
         if (crosshairImage == null) return;
 
-        Color targetColor;
+        UnityEngine.Color targetColor;
         if (!_handModeActive)
             targetColor = crosshairDefault;
         else if (_heldItem != null)

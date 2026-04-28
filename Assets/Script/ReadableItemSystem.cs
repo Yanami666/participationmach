@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ReadableItemSystem : MonoBehaviour
+public class ReadableItemSystem : UnityEngine.MonoBehaviour
 {
     [Header("References")]
     public PickupSystem pickupSystem;
@@ -12,18 +12,14 @@ public class ReadableItemSystem : MonoBehaviour
     {
         ReadableItem newReadable = GetHeldReadable();
 
-        // 换了物品或放下物品，关闭上一个的 panel
         if (newReadable != _currentReadable)
         {
             _currentReadable?.ClosePanel();
             _currentReadable = newReadable;
         }
 
-        // I 键切换
         if (Keyboard.current.iKey.wasPressedThisFrame)
-        {
             _currentReadable?.TogglePanel();
-        }
     }
 
     private ReadableItem GetHeldReadable()
@@ -33,4 +29,7 @@ public class ReadableItemSystem : MonoBehaviour
         if (held == null) return null;
         return held.GetComponent<ReadableItem>();
     }
+
+    // PickupSystem 调用这个来获取追加文字
+    public bool HeldItemIsReadable => _currentReadable != null;
 }

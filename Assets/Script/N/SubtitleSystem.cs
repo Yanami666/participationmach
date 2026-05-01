@@ -4,13 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-/// <summary>
-/// 字幕渲染引擎。
-/// 模式 SlideUp       → 每词从下方滑入（效果1/2/3）
-/// 模式 Fall          → 每词从上方坠落堆叠（效果4）
-/// 模式 Strikethrough → 词显示后被划掉并替换（效果5）
-/// 挂在含 TextMeshPro 的 GameObject 上。
-/// </summary>
 public class SubtitleSystem : UnityEngine.MonoBehaviour
 {
     public enum PlayMode { SlideUp, Fall, Strikethrough }
@@ -29,14 +22,12 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         public List<Word> words = new List<Word>();
     }
 
-    // ─── Inspector ────────────────────────────────────────────────────────
-
     [Header("组件引用")]
     public TextMeshProUGUI textComponent;
 
     [Header("SlideUp 配置")]
-    [UnityEngine.Range(0.05f, 0.4f)] public float wordInterval = 0.09f;
-    [UnityEngine.Range(0.1f, 0.8f)] public float wordAnimDuration = 0.35f;
+    [UnityEngine.Range(0.02f, 0.2f)] public float charInterval = 0.04f;
+    [UnityEngine.Range(0.1f, 0.8f)] public float charAnimDuration = 0.25f;
     [UnityEngine.Range(0f, 10f)] public float displayDuration = 3f;
     [UnityEngine.Range(0.1f, 1.5f)] public float fadeDuration = 0.6f;
 
@@ -49,26 +40,27 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
     [UnityEngine.Range(0f, 1f)] public float strikeDelay = 0.25f;
     [UnityEngine.Range(0.1f, 0.6f)] public float strikeDuration = 0.3f;
 
-    [Header("字体样式")]
-    public float normalFontSize = 22f;
-    public float largeFontSize = 30f;
-    public float smallFontSize = 16f;
+    [Header("颜色")]
     public UnityEngine.Color normalColor = new UnityEngine.Color(0.94f, 0.90f, 0.78f, 1f);
     public UnityEngine.Color largeColor = new UnityEngine.Color(1.00f, 0.97f, 0.91f, 1f);
     public UnityEngine.Color smallColor = new UnityEngine.Color(0.78f, 0.72f, 0.54f, 1f);
 
-    // ─── 内部状态 ──────────────────────────────────────────────────────────
+    private class Char
+    {
+        public string ch;
+        public WordStyle style;
+        public bool isSpace;
+        public bool isLineBreak;
+    }
 
-    private List<Word> _words = new List<Word>();
-    private List<float> _progress = new List<float>(); // alpha/slide 进度 0~1
-    private List<float> _yOffset = new List<float>(); // voffset em
-    private HashSet<int> _lineBreaks = new HashSet<int>();
+    private List<Char> _chars = new List<Char>();
+    private List<float> _progress = new List<float>();
+    private List<float> _yOffset = new List<float>();
     private float _groupAlpha = 1f;
 
-    // Strikethrough 专用
     private List<bool> _struck = new List<bool>();
     private List<float> _strikeP = new List<float>();
-    private List<Word> _replacements = new List<Word>();
+    private List<Char> _replacementChars = new List<Char>();
     private List<bool> _hasReplacement = new List<bool>();
     private List<float> _replaceProgress = new List<float>();
 
@@ -79,8 +71,6 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         if (textComponent == null)
             UnityEngine.Debug.LogError("[SubtitleSystem] 找不到 TextMeshProUGUI！");
     }
-
-    // ─── 公开 API ──────────────────────────────────────────────────────────
 
     public void Play(List<Line> lines, PlayMode mode = PlayMode.SlideUp)
     {
@@ -95,16 +85,10 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
     public void PlaySimple(string sentence, PlayMode mode = PlayMode.SlideUp)
     {
         var line = new Line();
-        foreach (var w in sentence.Split(' '))
-            if (!string.IsNullOrEmpty(w))
-                line.words.Add(new Word { text = w });
+        line.words.Add(new Word { text = sentence });
         Play(new List<Line> { line }, mode);
     }
 
-    /// <summary>
-    /// 效果5：原始词逐一显示 → 被划线 → 替换词 SlideUp 出现
-    /// originals 和 replacements 长度不需要相等；没有对应替换词的保持原样
-    /// </summary>
     public void PlayStrikethrough(List<Word> originals, List<Word> replacements)
     {
         StopAllCoroutines();
@@ -120,24 +104,43 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
 
     public bool IsPlaying { get; private set; } = false;
 
-    // ─── SlideUp 协程 ─────────────────────────────────────────────────────
+    private void BuildCharList(List<Line> lines)
+    {
+        _chars.Clear();
+        foreach (var line in lines)
+        {
+            for (int wi = 0; wi < line.words.Count; wi++)
+            {
+                var word = line.words[wi];
+                foreach (var ch in word.text)
+                    _chars.Add(new Char { ch = ch.ToString(), style = word.style });
+                if (wi < line.words.Count - 1)
+                    _chars.Add(new Char { ch = " ", style = word.style, isSpace = true });
+            }
+            _chars.Add(new Char { ch = "\n", style = WordStyle.Normal, isLineBreak = true });
+        }
+        if (_chars.Count > 0 && _chars[_chars.Count - 1].isLineBreak)
+            _chars.RemoveAt(_chars.Count - 1);
+    }
 
     private IEnumerator CoSlideUp(List<Line> lines)
     {
         IsPlaying = true;
-        BuildWordList(lines);
-        int n = _words.Count;
+        BuildCharList(lines);
+        int n = _chars.Count;
         _progress = ZeroList(n);
         _yOffset = ZeroList(n);
         _groupAlpha = 1f;
+        if (textComponent != null) textComponent.color = UnityEngine.Color.white;
 
         for (int i = 0; i < n; i++)
         {
-            if (i > 0) yield return new WaitForSeconds(wordInterval);
+            if (_chars[i].isSpace || _chars[i].isLineBreak) { _progress[i] = 1f; continue; }
+            if (i > 0) yield return new WaitForSeconds(charInterval);
             StartCoroutine(CoAnimSlide(i));
         }
-        yield return new WaitForSeconds(wordAnimDuration + wordInterval * n);
 
+        yield return new WaitForSeconds(charAnimDuration + charInterval * n);
         if (displayDuration > 0f)
         {
             yield return new WaitForSeconds(displayDuration);
@@ -149,12 +152,12 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
     private IEnumerator CoAnimSlide(int idx)
     {
         float t = 0f;
-        while (t < wordAnimDuration)
+        while (t < charAnimDuration)
         {
             t += UnityEngine.Time.deltaTime;
-            float p = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / wordAnimDuration));
+            float p = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / charAnimDuration));
             _progress[idx] = p;
-            _yOffset[idx] = UnityEngine.Mathf.Lerp(12f, 0f, p);
+            _yOffset[idx] = UnityEngine.Mathf.Lerp(14f, 0f, p);
             RebuildGeneric();
             yield return null;
         }
@@ -163,27 +166,27 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         RebuildGeneric();
     }
 
-    // ─── Fall 协程 ────────────────────────────────────────────────────────
-
     private IEnumerator CoFall(List<Line> lines)
     {
         IsPlaying = true;
-        BuildWordList(lines);
-        int n = _words.Count;
+        BuildCharList(lines);
+        int n = _chars.Count;
         _progress = ZeroList(n);
         _yOffset = new List<float>(new float[n]);
         _groupAlpha = 1f;
+        if (textComponent != null) textComponent.color = UnityEngine.Color.white;
 
         for (int i = 0; i < n; i++)
             _yOffset[i] = -fallStartHeight * UnityEngine.Random.Range(0.8f, 1.2f);
 
         for (int i = 0; i < n; i++)
         {
-            if (i > 0) yield return new WaitForSeconds(wordInterval * 0.65f);
+            if (_chars[i].isSpace || _chars[i].isLineBreak) { _progress[i] = 1f; continue; }
+            if (i > 0) yield return new WaitForSeconds(charInterval * 0.65f);
             StartCoroutine(CoAnimFall(i, _yOffset[i]));
         }
-        yield return new WaitForSeconds(fallDuration + wordInterval * n + 0.3f);
 
+        yield return new WaitForSeconds(fallDuration + charInterval * n + 0.3f);
         if (displayDuration > 0f)
         {
             yield return new WaitForSeconds(displayDuration);
@@ -200,11 +203,10 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
             t += UnityEngine.Time.deltaTime;
             float norm = UnityEngine.Mathf.Clamp01(t / fallDuration);
             float posT;
-
             if (norm < 0.85f)
             {
                 float t2 = norm / 0.85f;
-                posT = t2 * t2; // easeInQuad 加速下落
+                posT = t2 * t2;
             }
             else
             {
@@ -212,9 +214,8 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
                 float bounce = UnityEngine.Mathf.Sin(t2 * UnityEngine.Mathf.PI) * fallBounce;
                 posT = 1f - bounce;
             }
-
             _yOffset[idx] = UnityEngine.Mathf.Lerp(startY, 0f, posT);
-            _progress[idx] = UnityEngine.Mathf.Clamp01(posT * 2f); // 前半段淡入
+            _progress[idx] = UnityEngine.Mathf.Clamp01(posT * 2f);
             RebuildGeneric();
             yield return null;
         }
@@ -223,47 +224,57 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         RebuildGeneric();
     }
 
-    // ─── Strikethrough 协程 ───────────────────────────────────────────────
-
     private IEnumerator CoStrikethrough(List<Word> originals, List<Word> replacements)
     {
         IsPlaying = true;
-        int oCount = originals.Count;
+        var line = new Line { words = new List<Word>(originals) };
+        BuildCharList(new List<Line> { line });
 
-        _words = new List<Word>(originals);
-        _progress = ZeroList(oCount);
-        _yOffset = ZeroList(oCount);
-        _struck = new List<bool>(new bool[oCount]);
-        _strikeP = ZeroList(oCount);
-        _replacements = new List<Word>(new Word[oCount]);
-        _hasReplacement = new List<bool>(new bool[oCount]);
-        _replaceProgress = ZeroList(oCount);
-        _lineBreaks.Clear();
+        int n = _chars.Count;
+        _progress = ZeroList(n);
+        _yOffset = ZeroList(n);
+        _struck = new List<bool>(new bool[n]);
+        _strikeP = ZeroList(n);
+        _hasReplacement = new List<bool>(new bool[n]);
+        _replaceProgress = ZeroList(n);
+        _replacementChars = new List<Char>(new Char[n]);
         _groupAlpha = 1f;
+        if (textComponent != null) textComponent.color = UnityEngine.Color.white;
 
-        for (int i = 0; i < oCount; i++)
+        int charIdx = 0;
+        for (int wi = 0; wi < originals.Count; wi++)
         {
-            _hasReplacement[i] = i < replacements.Count;
-            if (_hasReplacement[i]) _replacements[i] = replacements[i];
+            bool hasRepl = wi < replacements.Count;
+            int wordLen = originals[wi].text.Length;
+            for (int ci = 0; ci < wordLen && charIdx < n; ci++, charIdx++)
+            {
+                _hasReplacement[charIdx] = hasRepl;
+                if (hasRepl)
+                {
+                    string replText = replacements[wi].text;
+                    _replacementChars[charIdx] = new Char
+                    {
+                        ch = ci < replText.Length ? replText[ci].ToString() : "",
+                        style = replacements[wi].style
+                    };
+                }
+            }
+            if (charIdx < n && _chars[charIdx].isSpace) charIdx++;
         }
 
-        // 第一阶段：原词逐一 SlideUp
-        for (int i = 0; i < oCount; i++)
+        for (int i = 0; i < n; i++)
         {
-            if (i > 0) yield return new WaitForSeconds(wordInterval);
+            if (_chars[i].isSpace || _chars[i].isLineBreak) { _progress[i] = 1f; continue; }
+            if (i > 0) yield return new WaitForSeconds(charInterval);
             yield return StartCoroutine(CoAnimSlideStrike(i));
         }
         yield return new WaitForSeconds(0.4f);
 
-        // 第二阶段：逐词划线 → 替换词出现
-        for (int i = 0; i < oCount; i++)
+        for (int i = 0; i < n; i++)
         {
-            if (!_hasReplacement[i]) continue;
-
-            yield return new WaitForSeconds(strikeDelay);
+            if (_chars[i].isSpace || !_hasReplacement[i]) continue;
+            yield return new WaitForSeconds(strikeDelay * 0.3f);
             yield return StartCoroutine(CoAnimStrikeLine(i));
-
-            yield return new WaitForSeconds(strikeDelay * 0.5f);
             yield return StartCoroutine(CoAnimReplacement(i));
         }
 
@@ -278,12 +289,12 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
     private IEnumerator CoAnimSlideStrike(int idx)
     {
         float t = 0f;
-        while (t < wordAnimDuration)
+        while (t < charAnimDuration)
         {
             t += UnityEngine.Time.deltaTime;
-            float p = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / wordAnimDuration));
+            float p = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / charAnimDuration));
             _progress[idx] = p;
-            _yOffset[idx] = UnityEngine.Mathf.Lerp(12f, 0f, p);
+            _yOffset[idx] = UnityEngine.Mathf.Lerp(14f, 0f, p);
             RebuildStrikethrough();
             yield return null;
         }
@@ -310,18 +321,16 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
     private IEnumerator CoAnimReplacement(int idx)
     {
         float t = 0f;
-        while (t < wordAnimDuration)
+        while (t < charAnimDuration)
         {
             t += UnityEngine.Time.deltaTime;
-            _replaceProgress[idx] = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / wordAnimDuration));
+            _replaceProgress[idx] = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / charAnimDuration));
             RebuildStrikethrough();
             yield return null;
         }
         _replaceProgress[idx] = 1f;
         RebuildStrikethrough();
     }
-
-    // ─── FadeOut ──────────────────────────────────────────────────────────
 
     private IEnumerator CoFadeGroup()
     {
@@ -340,100 +349,84 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         if (textComponent != null) textComponent.text = "";
     }
 
-    // ─── Rebuild：通用（SlideUp / Fall）─────────────────────────────────
-
     private void RebuildGeneric()
     {
         if (textComponent == null) return;
         var sb = new System.Text.StringBuilder();
-        for (int i = 0; i < _words.Count; i++)
+
+        for (int i = 0; i < _chars.Count; i++)
         {
+            var c = _chars[i];
+            if (c.isLineBreak) { sb.Append("\n"); continue; }
+            if (c.isSpace) { sb.Append(" "); continue; }
+
             float p = SafeGet(_progress, i, 1f);
             float y = SafeGet(_yOffset, i, 0f);
-            int hex = UnityEngine.Mathf.RoundToInt(p * _groupAlpha * 255f);
-            AppendWord(sb, _words[i], y, hex);
-            sb.Append(_lineBreaks.Contains(i) ? "\n" : " ");
+            int aHex = UnityEngine.Mathf.RoundToInt(p * _groupAlpha * 255f);
+            var col = GetColor(c.style);
+            string hex = UnityEngine.ColorUtility.ToHtmlStringRGB(col);
+
+            sb.Append($"<color=#{hex}><alpha=#{aHex:X2}><voffset={y}px><i>{c.ch}</i></voffset></color>");
         }
+
         textComponent.text = sb.ToString();
     }
-
-    // ─── Rebuild：Strikethrough ───────────────────────────────────────────
 
     private void RebuildStrikethrough()
     {
         if (textComponent == null) return;
         var sb = new System.Text.StringBuilder();
 
-        for (int i = 0; i < _words.Count; i++)
+        for (int i = 0; i < _chars.Count; i++)
         {
+            var c = _chars[i];
+            if (c.isLineBreak) { sb.Append("\n"); continue; }
+            if (c.isSpace) { sb.Append(" "); continue; }
+
             float p = SafeGet(_progress, i, 1f);
             float y = SafeGet(_yOffset, i, 0f);
             bool struck = _struck.Count > i && _struck[i];
             float sp = SafeGet(_strikeP, i, 0f);
-            bool hasRepl = _hasReplacement.Count > i && _hasReplacement[i];
             float rp = SafeGet(_replaceProgress, i, 0f);
+            var col = GetColor(c.style);
+            string hex = UnityEngine.ColorUtility.ToHtmlStringRGB(col);
 
             if (struck)
             {
-                // 原词暗化 + <s> 划线
                 float fade = UnityEngine.Mathf.Lerp(1f, 0.3f, sp);
                 int aHex = UnityEngine.Mathf.RoundToInt(p * fade * _groupAlpha * 255f);
-                float fs = GetFontSize(_words[i].style);
-                var col = GetColor(_words[i].style);
-                string chex = UnityEngine.ColorUtility.ToHtmlStringRGB(col);
-                sb.Append($"<size={fs}><color=#{chex}><alpha=#{aHex:X2}><s><i>{_words[i].text}</i></s></color></size>");
+                sb.Append($"<color=#{hex}><alpha=#{aHex:X2}><s><i>{c.ch}</i></s></color>");
 
-                // 替换词
-                if (hasRepl && _replacements[i] != null && rp > 0f)
+                var rc = (_replacementChars != null && i < _replacementChars.Count)
+                    ? _replacementChars[i] : null;
+                if (rc != null && !string.IsNullOrEmpty(rc.ch) && rp > 0f)
                 {
-                    sb.Append(" ");
-                    float replY = UnityEngine.Mathf.Lerp(12f, 0f, rp);
-                    int replHex = UnityEngine.Mathf.RoundToInt(rp * _groupAlpha * 255f);
-                    AppendWord(sb, _replacements[i], replY, replHex);
+                    float ry = UnityEngine.Mathf.Lerp(14f, 0f, rp);
+                    int raHex = UnityEngine.Mathf.RoundToInt(rp * _groupAlpha * 255f);
+                    var rcol = GetColor(rc.style);
+                    string rhex = UnityEngine.ColorUtility.ToHtmlStringRGB(rcol);
+                    sb.Append($"<color=#{rhex}><alpha=#{raHex:X2}><voffset={ry}px><i>{rc.ch}</i></voffset></color>");
                 }
             }
             else
             {
                 int aHex = UnityEngine.Mathf.RoundToInt(p * _groupAlpha * 255f);
-                AppendWord(sb, _words[i], y, aHex);
+                sb.Append($"<color=#{hex}><alpha=#{aHex:X2}><voffset={y}px><i>{c.ch}</i></voffset></color>");
             }
-
-            sb.Append(_lineBreaks.Contains(i) ? "\n" : " ");
         }
+
         textComponent.text = sb.ToString();
     }
-
-    // ─── 工具 ─────────────────────────────────────────────────────────────
-
-    private void AppendWord(System.Text.StringBuilder sb, Word w, float yEm, int alphaHex)
-    {
-        float fs = GetFontSize(w.style);
-        string hex = UnityEngine.ColorUtility.ToHtmlStringRGB(GetColor(w.style));
-        sb.Append($"<size={fs}><color=#{hex}><alpha=#{alphaHex:X2}><voffset={yEm}em><i>{w.text ?? ""}</i></voffset></color></size>");
-    }
-
-    private float GetFontSize(WordStyle s) =>
-        s == WordStyle.Large ? largeFontSize :
-        s == WordStyle.Small ? smallFontSize : normalFontSize;
 
     private UnityEngine.Color GetColor(WordStyle s) =>
         s == WordStyle.Large ? largeColor :
         s == WordStyle.Small ? smallColor : normalColor;
 
-    private void BuildWordList(List<Line> lines)
-    {
-        _words.Clear();
-        _lineBreaks.Clear();
-        int idx = 0;
-        foreach (var line in lines)
-        {
-            foreach (var w in line.words) { _words.Add(w); idx++; }
-            if (idx > 0) _lineBreaks.Add(idx - 1);
-        }
-    }
-
     private static List<float> ZeroList(int n) => new List<float>(new float[n]);
+
     private static float SafeGet(List<float> list, int i, float fallback) =>
         (list != null && i < list.Count) ? list[i] : fallback;
-    private static float EaseOutCubic(float t) => 1f - UnityEngine.Mathf.Pow(1f - t, 3f);
+
+    private static float EaseOutCubic(float t) =>
+        1f - UnityEngine.Mathf.Pow(1f - t, 3f);
 }

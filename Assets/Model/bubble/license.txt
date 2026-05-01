@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bubble
+* source:	https://sketchfab.com/3d-models/bubble-db5b743912b54121ba84b2a4421e3478
+* author:	haisanberg (https://sketchfab.com/haisanberg)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bubble" (https://sketchfab.com/3d-models/bubble-db5b743912b54121ba84b2a4421e3478) by haisanberg (https://sketchfab.com/haisanberg) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

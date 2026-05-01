@@ -123,6 +123,8 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
             _chars.RemoveAt(_chars.Count - 1);
     }
 
+    // ─── SlideUp ──────────────────────────────────────────────────────────
+
     private IEnumerator CoSlideUp(List<Line> lines)
     {
         IsPlaying = true;
@@ -157,7 +159,7 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
             t += UnityEngine.Time.deltaTime;
             float p = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / charAnimDuration));
             _progress[idx] = p;
-            _yOffset[idx] = UnityEngine.Mathf.Lerp(14f, 0f, p);
+            _yOffset[idx] = UnityEngine.Mathf.Lerp(-14f, 0f, p); // 从下方滑入
             RebuildGeneric();
             yield return null;
         }
@@ -165,6 +167,8 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         _yOffset[idx] = 0f;
         RebuildGeneric();
     }
+
+    // ─── Fall ─────────────────────────────────────────────────────────────
 
     private IEnumerator CoFall(List<Line> lines)
     {
@@ -177,7 +181,7 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         if (textComponent != null) textComponent.color = UnityEngine.Color.white;
 
         for (int i = 0; i < n; i++)
-            _yOffset[i] = -fallStartHeight * UnityEngine.Random.Range(0.8f, 1.2f);
+            _yOffset[i] = fallStartHeight * UnityEngine.Random.Range(0.8f, 1.2f); // 从上方落下
 
         for (int i = 0; i < n; i++)
         {
@@ -206,7 +210,7 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
             if (norm < 0.85f)
             {
                 float t2 = norm / 0.85f;
-                posT = t2 * t2;
+                posT = t2 * t2; // easeInQuad 加速坠落
             }
             else
             {
@@ -223,6 +227,8 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         _progress[idx] = 1f;
         RebuildGeneric();
     }
+
+    // ─── Strikethrough ────────────────────────────────────────────────────
 
     private IEnumerator CoStrikethrough(List<Word> originals, List<Word> replacements)
     {
@@ -294,7 +300,7 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
             t += UnityEngine.Time.deltaTime;
             float p = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / charAnimDuration));
             _progress[idx] = p;
-            _yOffset[idx] = UnityEngine.Mathf.Lerp(14f, 0f, p);
+            _yOffset[idx] = UnityEngine.Mathf.Lerp(-14f, 0f, p);
             RebuildStrikethrough();
             yield return null;
         }
@@ -332,6 +338,8 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         RebuildStrikethrough();
     }
 
+    // ─── FadeOut ──────────────────────────────────────────────────────────
+
     private IEnumerator CoFadeGroup()
     {
         float t = 0f;
@@ -349,11 +357,12 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         if (textComponent != null) textComponent.text = "";
     }
 
+    // ─── Rebuild ──────────────────────────────────────────────────────────
+
     private void RebuildGeneric()
     {
         if (textComponent == null) return;
         var sb = new System.Text.StringBuilder();
-
         for (int i = 0; i < _chars.Count; i++)
         {
             var c = _chars[i];
@@ -363,12 +372,10 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
             float p = SafeGet(_progress, i, 1f);
             float y = SafeGet(_yOffset, i, 0f);
             int aHex = UnityEngine.Mathf.RoundToInt(p * _groupAlpha * 255f);
-            var col = GetColor(c.style);
-            string hex = UnityEngine.ColorUtility.ToHtmlStringRGB(col);
+            string hex = UnityEngine.ColorUtility.ToHtmlStringRGB(GetColor(c.style));
 
             sb.Append($"<color=#{hex}><alpha=#{aHex:X2}><voffset={y}px><i>{c.ch}</i></voffset></color>");
         }
-
         textComponent.text = sb.ToString();
     }
 
@@ -376,7 +383,6 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
     {
         if (textComponent == null) return;
         var sb = new System.Text.StringBuilder();
-
         for (int i = 0; i < _chars.Count; i++)
         {
             var c = _chars[i];
@@ -388,8 +394,7 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
             bool struck = _struck.Count > i && _struck[i];
             float sp = SafeGet(_strikeP, i, 0f);
             float rp = SafeGet(_replaceProgress, i, 0f);
-            var col = GetColor(c.style);
-            string hex = UnityEngine.ColorUtility.ToHtmlStringRGB(col);
+            string hex = UnityEngine.ColorUtility.ToHtmlStringRGB(GetColor(c.style));
 
             if (struck)
             {
@@ -401,10 +406,9 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
                     ? _replacementChars[i] : null;
                 if (rc != null && !string.IsNullOrEmpty(rc.ch) && rp > 0f)
                 {
-                    float ry = UnityEngine.Mathf.Lerp(14f, 0f, rp);
+                    float ry = UnityEngine.Mathf.Lerp(-14f, 0f, rp);
                     int raHex = UnityEngine.Mathf.RoundToInt(rp * _groupAlpha * 255f);
-                    var rcol = GetColor(rc.style);
-                    string rhex = UnityEngine.ColorUtility.ToHtmlStringRGB(rcol);
+                    string rhex = UnityEngine.ColorUtility.ToHtmlStringRGB(GetColor(rc.style));
                     sb.Append($"<color=#{rhex}><alpha=#{raHex:X2}><voffset={ry}px><i>{rc.ch}</i></voffset></color>");
                 }
             }
@@ -414,9 +418,10 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
                 sb.Append($"<color=#{hex}><alpha=#{aHex:X2}><voffset={y}px><i>{c.ch}</i></voffset></color>");
             }
         }
-
         textComponent.text = sb.ToString();
     }
+
+    // ─── 工具 ─────────────────────────────────────────────────────────────
 
     private UnityEngine.Color GetColor(WordStyle s) =>
         s == WordStyle.Large ? largeColor :

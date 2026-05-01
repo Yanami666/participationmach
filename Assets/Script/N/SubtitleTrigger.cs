@@ -1,17 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 挂在场景物体上，驱动五种字幕效果。
-/// 需要同一 GameObject 上有 WorldSubtitleAnchor。
-/// 
-/// 效果对应：
-///   GazeSlideUp      → 注视触发，SlideUp 动画（效果1）
-///   TouchSurface     → 触碰 Trigger，贴最近平面（效果2）
-///   Persistent       → 常驻标签（效果3）
-///   GazeFall         → 注视触发，Fall 坠落动画（效果4）
-///   TouchStrike      → 触碰 Trigger，划线替换（效果5）
-/// </summary>
 [RequireComponent(typeof(WorldSubtitleAnchor))]
 public class SubtitleTrigger : UnityEngine.MonoBehaviour
 {
@@ -19,7 +8,6 @@ public class SubtitleTrigger : UnityEngine.MonoBehaviour
     {
         GazeSlideUp,
         TouchSurface,
-        Persistent,
         GazeFall,
         TouchStrike
     }
@@ -38,17 +26,12 @@ public class SubtitleTrigger : UnityEngine.MonoBehaviour
     public List<SubtitleSystem.Word> strikeReplacements = new List<SubtitleSystem.Word>();
 
     [Header("行为")]
-    [Tooltip("只触发一次")]
     public bool triggerOnce = true;
-    [Tooltip("注视多少秒后触发（Gaze 类效果）")]
     [UnityEngine.Range(0f, 3f)]
     public float gazeHoldTime = 0.5f;
 
     [Header("Gaze 检测（场景需有 GazeScanner）")]
-    [Tooltip("最远被注视到的距离")]
     public float gazeRange = 6f;
-
-    // ─── 内部 ──────────────────────────────────────────────────────────────
 
     private WorldSubtitleAnchor _anchor;
     private bool _fired = false;
@@ -58,7 +41,6 @@ public class SubtitleTrigger : UnityEngine.MonoBehaviour
     {
         _anchor = GetComponent<WorldSubtitleAnchor>();
 
-        // 根据效果自动配置 Anchor 模式
         switch (effect)
         {
             case Effect.GazeSlideUp:
@@ -69,18 +51,8 @@ public class SubtitleTrigger : UnityEngine.MonoBehaviour
             case Effect.TouchStrike:
                 _anchor.anchorMode = WorldSubtitleAnchor.AnchorMode.NearestSurface;
                 break;
-            case Effect.Persistent:
-                _anchor.anchorMode = WorldSubtitleAnchor.AnchorMode.Persistent;
-                break;
         }
     }
-
-    private void Start()
-    {
-        if (effect == Effect.Persistent) Fire();
-    }
-
-    // ─── Gaze（由 GazeScanner 每帧调用）──────────────────────────────────
 
     public void OnGazeEnter() { }
 
@@ -88,7 +60,6 @@ public class SubtitleTrigger : UnityEngine.MonoBehaviour
     {
         if (_fired && triggerOnce) return;
         if (effect != Effect.GazeSlideUp && effect != Effect.GazeFall) return;
-
         _gazeTimer += dt;
         if (_gazeTimer >= gazeHoldTime) Fire();
     }
@@ -98,8 +69,6 @@ public class SubtitleTrigger : UnityEngine.MonoBehaviour
         _gazeTimer = 0f;
     }
 
-    // ─── Touch ────────────────────────────────────────────────────────────
-
     private void OnTriggerEnter(UnityEngine.Collider other)
     {
         if (effect != Effect.TouchSurface && effect != Effect.TouchStrike) return;
@@ -107,8 +76,6 @@ public class SubtitleTrigger : UnityEngine.MonoBehaviour
         if (!other.CompareTag("Player")) return;
         Fire();
     }
-
-    // ─── 触发 ─────────────────────────────────────────────────────────────
 
     private void Fire()
     {

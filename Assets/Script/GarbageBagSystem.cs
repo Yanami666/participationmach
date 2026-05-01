@@ -19,9 +19,11 @@ public class GarbageBagSystem : MonoBehaviour
     [Header("Prompt / 提示")]
     [SerializeField] private string promptMessage = "[LMB] Throw Trash";
 
-    [Header("Feedback / 反馈(可选)")]
-    [SerializeField] private AudioClip collectSFX;
+    [Header("SFX / 音效")]
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip collectSFX;
+    [SerializeField] private AudioClip equipSFX;
+    [SerializeField] private AudioClip unequipSFX;
 
     [Header("Input / 输入")]
     [SerializeField] private InputActionAsset inputActions;
@@ -70,9 +72,17 @@ public class GarbageBagSystem : MonoBehaviour
         if (trashBagViewModel != null)
             trashBagViewModel.SetActive(_trashBagSelected);
 
-        // 切换走时隐藏提示
-        if (!_trashBagSelected)
+        if (_trashBagSelected)
+        {
+            if (audioSource != null && equipSFX != null)
+                audioSource.PlayOneShot(equipSFX);
+        }
+        else
+        {
+            if (audioSource != null && unequipSFX != null)
+                audioSource.PlayOneShot(unequipSFX);
             pickupSystem?.HidePrompt();
+        }
     }
 
     private void Update()
@@ -81,7 +91,6 @@ public class GarbageBagSystem : MonoBehaviour
 
         bool lookingAtTrash = CheckLookingAtTrash(out GameObject trash);
 
-        // 用 PickupSystem 的 prompt 显示/隐藏
         if (lookingAtTrash)
             pickupSystem?.ShowPrompt(promptMessage);
         else
@@ -118,6 +127,7 @@ public class GarbageBagSystem : MonoBehaviour
     {
         if (trashBagAnimator != null)
             trashBagAnimator.SetTrigger(IsCollectingHash);
+
         if (audioSource != null && collectSFX != null)
             audioSource.PlayOneShot(collectSFX);
 

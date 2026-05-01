@@ -6,13 +6,23 @@ public class CleaningSystem : MonoBehaviour
     [Header("References / 引用")]
     [SerializeField] private Animator spongeAnimator;
     [SerializeField] private GameObject spongeViewModel;
+
     [Header("Settings / 设置")]
     [SerializeField] private string spongeToolName = "Sponge";
+
+    [Header("SFX / 音效")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip cleanStartSFX;
+    [SerializeField] private AudioClip cleanLoopSFX;
+    [SerializeField] private AudioClip cleanStopSFX;
+
     [Header("Input / 输入")]
     [SerializeField] private InputActionAsset inputActions;
 
     private InputAction _cleanAction;
     private bool _spongeSelected = false;
+    private bool _isCleaning = false;
+    private AudioSource _loopSource;
     private static readonly int IsCleaningHash = Animator.StringToHash("IsCleaning");
 
     private void Awake()
@@ -29,6 +39,20 @@ public class CleaningSystem : MonoBehaviour
 
         if (spongeViewModel != null)
             spongeViewModel.SetActive(false);
+
+        // 单独一个 AudioSource 用于循环音效
+        if (cleanLoopSFX != null)
+        {
+            _loopSource = gameObject.AddComponent<AudioSource>();
+            _loopSource.clip = cleanLoopSFX;
+            _loopSource.loop = true;
+            _loopSource.playOnAwake = false;
+            if (audioSource != null)
+            {
+                _loopSource.volume = audioSource.volume;
+                _loopSource.spatialBlend = audioSource.spatialBlend;
+            }
+        }
     }
 
     private void Start()
@@ -51,20 +75,48 @@ public class CleaningSystem : MonoBehaviour
         if (spongeViewModel != null)
             spongeViewModel.SetActive(_spongeSelected);
 
-        if (!_spongeSelected && spongeAnimator != null)
-            spongeAnimator.SetBool(IsCleaningHash, false);
+        if (!_spongeSelected)
+        {
+            StopCleaning();
+            if (spongeAnimator != null)
+                spongeAnimator.SetBool(IsCleaningHash, false);
+        }
     }
 
     private void Update()
     {
-        if (!_spongeSelected) return;
-        if (_cleanAction == null) return;
-        if (spongeAnimator == null) return;
+        if (!_spongeSelected || _cleanAction == null || spongeAnimator == null) return;
 
         if (_cleanAction.WasPressedThisFrame())
-            spongeAnimator.SetBool(IsCleaningHash, true);
+            StartCleaning();
 
         if (_cleanAction.WasReleasedThisFrame())
+            StopCleaning();
+    }
+
+    private void StartCleaning()
+    {
+        if (_isCleaning) return;
+        _isCleaning = true;
+        spongeAnimator.SetBool(IsCleaningHash, true);
+
+        if (audioSource != null && cleanStartSFX != null)
+            audioSource.PlayOneShot(cleanStartSFX);
+
+        _loopSource?.Play();
+    }
+
+    private void StopCleaning()
+    {
+        if (!_isCleaning) return;
+        _isCleaning = false;
+
+        if (spongeAnimator != null)
             spongeAnimator.SetBool(IsCleaningHash, false);
+
+        _loopSource?.Stop();
+
+        if (audioSource != null && cleanStopSFX != null)
+            audioSource.PlayOneShot(cleanStopSFX);
     }
 }

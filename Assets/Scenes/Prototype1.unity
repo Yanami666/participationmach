@@ -379,7 +379,7 @@ GameObject:
   - component: {fileID: 48987997}
   - component: {fileID: 48987996}
   m_Layer: 0
-  m_Name: xiaoguo1 (1)
+  m_Name: xg_surface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -405,6 +405,7 @@ MonoBehaviour:
   triggerOnce: 1
   gazeHoldTime: 0.5
   gazeRange: 6
+  proximityRange: 2
 --- !u!114 &48987997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,7 +422,7 @@ MonoBehaviour:
   hoverOffset: {x: 0, y: 0.5, z: 0}
   surfaceSearchRadius: 1.5
   surfaceOffset: 0
-  visibleRange: 6
+  surfacePositionOffset: {x: -2, y: 0.3, z: 0}
   billboard: 1
   canvasWidth: 1920
   canvasHeight: 1000
@@ -441,7 +442,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -6294,7 +6295,7 @@ GameObject:
   - component: {fileID: 1231880098}
   - component: {fileID: 1231880097}
   m_Layer: 0
-  m_Name: xiaoguo1 (2)
+  m_Name: xg_gazefall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6320,6 +6321,7 @@ MonoBehaviour:
   triggerOnce: 1
   gazeHoldTime: 0.5
   gazeRange: 6
+  proximityRange: 0.3
 --- !u!114 &1231880098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6336,7 +6338,7 @@ MonoBehaviour:
   hoverOffset: {x: 0, y: 0.5, z: 0}
   surfaceSearchRadius: 1.5
   surfaceOffset: 0
-  visibleRange: 6
+  surfacePositionOffset: {x: 0, y: 0.3, z: 0}
   billboard: 1
   canvasWidth: 1920
   canvasHeight: 400
@@ -6521,7 +6523,7 @@ GameObject:
   - component: {fileID: 1290556099}
   - component: {fileID: 1290556098}
   m_Layer: 0
-  m_Name: xiaoguo1
+  m_Name: xg_gaze up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6667,6 +6669,7 @@ MonoBehaviour:
   triggerOnce: 1
   gazeHoldTime: 0.5
   gazeRange: 6
+  proximityRange: 0.3
 --- !u!114 &1290556099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6683,7 +6686,7 @@ MonoBehaviour:
   hoverOffset: {x: 0, y: 0.5, z: 0}
   surfaceSearchRadius: 1.5
   surfaceOffset: 0
-  visibleRange: 6
+  surfacePositionOffset: {x: 0, y: 0.3, z: 0}
   billboard: 1
   canvasWidth: 1920
   canvasHeight: 400
@@ -8748,7 +8751,7 @@ GameObject:
   - component: {fileID: 2099868001}
   - component: {fileID: 2099868000}
   m_Layer: 0
-  m_Name: xiaoguo1 (3)
+  m_Name: xg_strike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8786,6 +8789,7 @@ MonoBehaviour:
   triggerOnce: 1
   gazeHoldTime: 0.5
   gazeRange: 6
+  proximityRange: 2
 --- !u!114 &2099868001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8798,11 +8802,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a54f112206ac44798b0a9db8fe493c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldSubtitleAnchor
-  anchorMode: 0
+  anchorMode: 1
   hoverOffset: {x: 0, y: 0.5, z: 0}
   surfaceSearchRadius: 1.5
   surfaceOffset: 0
-  visibleRange: 6
+  surfacePositionOffset: {x: 1, y: 0.2, z: 0}
   billboard: 1
   canvasWidth: 1920
   canvasHeight: 400
@@ -8822,7 +8826,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -9371,8 +9375,8 @@ SceneRoots:
   - {fileID: 3075034}
   - {fileID: 389645877}
   - {fileID: 1290556095}
-  - {fileID: 48988002}
   - {fileID: 1231880103}
+  - {fileID: 48988002}
   - {fileID: 2099868006}
   - {fileID: 577934396}
   - {fileID: 719423158}

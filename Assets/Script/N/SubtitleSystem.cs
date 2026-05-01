@@ -25,6 +25,9 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
     [Header("组件引用")]
     public TextMeshProUGUI textComponent;
 
+    // 由 WorldSubtitleAnchor 赋值，不在 Inspector 手动改
+    [HideInInspector] public float fontSize = 80f;
+
     [Header("SlideUp 配置")]
     [UnityEngine.Range(0.02f, 0.2f)] public float charInterval = 0.04f;
     [UnityEngine.Range(0.1f, 0.8f)] public float charAnimDuration = 0.25f;
@@ -32,9 +35,10 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
     [UnityEngine.Range(0.1f, 1.5f)] public float fadeDuration = 0.6f;
 
     [Header("Fall 配置")]
-    [UnityEngine.Range(1f, 20f)] public float fallStartHeight = 8f;
-    [UnityEngine.Range(0.1f, 1.2f)] public float fallDuration = 0.45f;
-    [UnityEngine.Range(0f, 0.8f)] public float fallBounce = 0.2f;
+    [Tooltip("字母起始高度，单位 px，建议 300~600")]
+    [UnityEngine.Range(100f, 800f)] public float fallStartHeight = 400f;
+    [UnityEngine.Range(0.1f, 1.2f)] public float fallDuration = 0.5f;
+    [UnityEngine.Range(0f, 0.8f)] public float fallBounce = 0.25f;
 
     [Header("Strikethrough 配置")]
     [UnityEngine.Range(0f, 1f)] public float strikeDelay = 0.25f;
@@ -153,13 +157,14 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
 
     private IEnumerator CoAnimSlide(int idx)
     {
+        float slideStart = -fontSize * 0.8f; // 相对字号的像素偏移，从下方
         float t = 0f;
         while (t < charAnimDuration)
         {
             t += UnityEngine.Time.deltaTime;
             float p = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / charAnimDuration));
             _progress[idx] = p;
-            _yOffset[idx] = UnityEngine.Mathf.Lerp(-14f, 0f, p); // 从下方滑入
+            _yOffset[idx] = UnityEngine.Mathf.Lerp(slideStart, 0f, p);
             RebuildGeneric();
             yield return null;
         }
@@ -181,7 +186,7 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         if (textComponent != null) textComponent.color = UnityEngine.Color.white;
 
         for (int i = 0; i < n; i++)
-            _yOffset[i] = fallStartHeight * UnityEngine.Random.Range(0.8f, 1.2f); // 从上方落下
+            _yOffset[i] = fallStartHeight * UnityEngine.Random.Range(0.8f, 1.2f);
 
         for (int i = 0; i < n; i++)
         {
@@ -210,7 +215,7 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
             if (norm < 0.85f)
             {
                 float t2 = norm / 0.85f;
-                posT = t2 * t2; // easeInQuad 加速坠落
+                posT = t2 * t2;
             }
             else
             {
@@ -294,13 +299,14 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
 
     private IEnumerator CoAnimSlideStrike(int idx)
     {
+        float slideStart = -fontSize * 0.8f;
         float t = 0f;
         while (t < charAnimDuration)
         {
             t += UnityEngine.Time.deltaTime;
             float p = EaseOutCubic(UnityEngine.Mathf.Clamp01(t / charAnimDuration));
             _progress[idx] = p;
-            _yOffset[idx] = UnityEngine.Mathf.Lerp(-14f, 0f, p);
+            _yOffset[idx] = UnityEngine.Mathf.Lerp(slideStart, 0f, p);
             RebuildStrikethrough();
             yield return null;
         }
@@ -326,6 +332,7 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
 
     private IEnumerator CoAnimReplacement(int idx)
     {
+        float slideStart = -fontSize * 0.8f;
         float t = 0f;
         while (t < charAnimDuration)
         {
@@ -337,8 +344,6 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
         _replaceProgress[idx] = 1f;
         RebuildStrikethrough();
     }
-
-    // ─── FadeOut ──────────────────────────────────────────────────────────
 
     private IEnumerator CoFadeGroup()
     {
@@ -406,7 +411,7 @@ public class SubtitleSystem : UnityEngine.MonoBehaviour
                     ? _replacementChars[i] : null;
                 if (rc != null && !string.IsNullOrEmpty(rc.ch) && rp > 0f)
                 {
-                    float ry = UnityEngine.Mathf.Lerp(-14f, 0f, rp);
+                    float ry = UnityEngine.Mathf.Lerp(-fontSize * 0.8f, 0f, rp);
                     int raHex = UnityEngine.Mathf.RoundToInt(rp * _groupAlpha * 255f);
                     string rhex = UnityEngine.ColorUtility.ToHtmlStringRGB(GetColor(rc.style));
                     sb.Append($"<color=#{rhex}><alpha=#{raHex:X2}><voffset={ry}px><i>{rc.ch}</i></voffset></color>");

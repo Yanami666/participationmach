@@ -32,6 +32,13 @@ public class PickupSystem : UnityEngine.MonoBehaviour
     [Header("Tool Mode / 工具模式")]
     [SerializeField] private string handToolName = "Hand";
 
+    [Header("SFX / 音效")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip pickupSFX;
+    [SerializeField] private AudioClip placeSFX;
+    [SerializeField] private AudioClip throwSFX;
+    [SerializeField] private AudioClip equipHandSFX;
+
     [Header("Input / 输入")]
     [SerializeField] private InputActionAsset inputActions;
 
@@ -87,7 +94,12 @@ public class PickupSystem : UnityEngine.MonoBehaviour
     {
         _handModeActive = (toolName == handToolName);
 
-        if (!_handModeActive)
+        if (_handModeActive)
+        {
+            if (audioSource != null && equipHandSFX != null)
+                audioSource.PlayOneShot(equipHandSFX);
+        }
+        else
         {
             HidePrompt();
             if (_heldItem != null)
@@ -135,15 +147,14 @@ public class PickupSystem : UnityEngine.MonoBehaviour
         _lookedAtItem = null;
         _canPlace = false;
 
-        if (!_handModeActive)
-            return;
+        if (!_handModeActive) return;
 
         Ray ray = new Ray(playerCamera.position, playerCamera.forward);
 
         if (_heldItem == null)
         {
             if (UnityEngine.Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayer,
-                                QueryTriggerInteraction.Ignore))
+                                            QueryTriggerInteraction.Ignore))
             {
                 PickableItem item = hit.collider.GetComponentInParent<PickableItem>();
                 if (item != null && !item.IsHeld)
@@ -151,23 +162,16 @@ public class PickupSystem : UnityEngine.MonoBehaviour
                     _lookedAtItem = item;
                     ShowPrompt(item.InteractPrompt);
                 }
-                else
-                {
-                    HidePrompt();
-                }
+                else HidePrompt();
             }
-            else
-            {
-                HidePrompt();
-            }
+            else HidePrompt();
         }
         else
         {
-            // 判断拿着的物体是否可阅读，追加 [I] Read 提示
             bool isReadable = readableItemSystem != null && readableItemSystem.HeldItemIsReadable;
 
             if (UnityEngine.Physics.Raycast(ray, out RaycastHit hit, placeRange, placeableLayer,
-                                QueryTriggerInteraction.Ignore))
+                                            QueryTriggerInteraction.Ignore))
             {
                 _placeHit = hit;
                 _canPlace = true;
@@ -189,6 +193,9 @@ public class PickupSystem : UnityEngine.MonoBehaviour
         item.OnPickedUp(holdPoint);
         _heldItem = item;
         HidePrompt();
+
+        if (audioSource != null && pickupSFX != null)
+            audioSource.PlayOneShot(pickupSFX);
     }
 
     private void PlaceItem()
@@ -196,6 +203,9 @@ public class PickupSystem : UnityEngine.MonoBehaviour
         if (_heldItem == null) return;
         _heldItem.OnPlaced(_placeHit.point, _placeHit.normal);
         _heldItem = null;
+
+        if (audioSource != null && placeSFX != null)
+            audioSource.PlayOneShot(placeSFX);
     }
 
     private void DropItem(bool isThrow)
@@ -208,6 +218,9 @@ public class PickupSystem : UnityEngine.MonoBehaviour
 
         _heldItem.OnDropped(throwDir, isThrow);
         _heldItem = null;
+
+        if (audioSource != null && throwSFX != null && isThrow)
+            audioSource.PlayOneShot(throwSFX);
     }
 
     private void UpdateCrosshairUI()

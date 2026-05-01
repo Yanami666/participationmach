@@ -38,7 +38,15 @@ public class NarrativeManager : UnityEngine.MonoBehaviour
     {
         UpdateRaycastScan();
     }
-
+    public void TryPlayAudioOnly(NarrativeClip clip)
+    {
+        if (clip == null) return;
+        if (clip.HasPlayed) return;
+        clip.HasPlayed = true;
+        _queue.Enqueue(clip);
+        if (!_isPlaying)
+            StartCoroutine(PlayQueue());
+    }
     private void UpdateRaycastScan()
     {
         if (playerCamera == null) return;

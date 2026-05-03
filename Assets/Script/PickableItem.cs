@@ -19,6 +19,7 @@ public class PickableItem : MonoBehaviour
     private Rigidbody _rb;
     private Collider[] _colliders;
     private bool _isHeld = false;
+    private UnityEngine.Vector3 _originalWorldScale;
 
     public string ItemID => itemID;
     public string ItemName => itemName;
@@ -31,48 +32,45 @@ public class PickableItem : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _colliders = GetComponentsInChildren<Collider>();
+        _originalWorldScale = transform.lossyScale; // 记录初始世界 scale
     }
 
     public void OnPickedUp(Transform holdPoint)
     {
         _isHeld = true;
-
         if (_rb != null)
         {
             _rb.linearVelocity = UnityEngine.Vector3.zero;
             _rb.angularVelocity = UnityEngine.Vector3.zero;
             _rb.isKinematic = true;
         }
-
         SetCollidersEnabled(false);
 
         transform.SetParent(holdPoint, worldPositionStays: false);
         transform.localPosition = UnityEngine.Vector3.zero;
         transform.localRotation = UnityEngine.Quaternion.identity;
+
+        // 反推 localScale 保持世界 scale 不变
+        UnityEngine.Vector3 parentScale = holdPoint.lossyScale;
+        transform.localScale = new UnityEngine.Vector3(
+            _originalWorldScale.x / parentScale.x,
+            _originalWorldScale.y / parentScale.y,
+            _originalWorldScale.z / parentScale.z);
     }
 
-    /// <summary>
-    /// Place item on a surface at a specific position aligned to surface normal.
-    /// 将物体放置到表面指定位置，朝向与法线对齐。
-    /// </summary>
     public void OnPlaced(UnityEngine.Vector3 position, UnityEngine.Vector3 surfaceNormal)
     {
         _isHeld = false;
         transform.SetParent(null);
-
-        // Position on surface / 放置到表面位置
         transform.position = position;
-
-        // Align upward direction to surface normal / 将物体上方向对齐到表面法线
         transform.rotation = UnityEngine.Quaternion.FromToRotation(UnityEngine.Vector3.up, surfaceNormal);
-
+        transform.localScale = _originalWorldScale; // 还原原始 scale
         if (_rb != null)
         {
             _rb.linearVelocity = UnityEngine.Vector3.zero;
             _rb.angularVelocity = UnityEngine.Vector3.zero;
             _rb.isKinematic = false;
         }
-
         StartCoroutine(ReEnableColliders(0.1f));
     }
 
@@ -80,11 +78,10 @@ public class PickableItem : MonoBehaviour
     {
         _isHeld = false;
         transform.SetParent(null);
-
+        transform.localScale = _originalWorldScale; // 还原原始 scale
         if (_rb != null)
         {
             _rb.isKinematic = false;
-
             if (isThrow)
             {
                 UnityEngine.Vector3 force = throwDirection * throwForce
@@ -93,7 +90,6 @@ public class PickableItem : MonoBehaviour
                 _rb.AddTorque(UnityEngine.Random.insideUnitSphere * throwTorque, ForceMode.Impulse);
             }
         }
-
         StartCoroutine(ReEnableColliders(0.15f));
     }
 

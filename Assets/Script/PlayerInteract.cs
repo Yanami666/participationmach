@@ -1,48 +1,46 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
 
 public class PlayerInteract : MonoBehaviour
 {
-    [Header("Raycast Settings")]
+    [Header("== Raycast设置 ==")]
     public float interactRange = 3f;
-    public LayerMask interactableLayer; // 设置可互动物体的 Layer
+    public LayerMask interactableLayer;
 
-    [Header("UI")]
-    public GameObject promptUI;         // 提示UI的GameObject（包含Text）
-    public TMP_Text promptText;         // 或者用 Text promptText（非TMP）
+    [Header("== UI设置 ==")]
+    public TextMeshProUGUI interactPromptText;
+
+    [Header("== 引用 ==")]
+    public PickupSystem pickupSystem; // 拖入同一个Camera上的PickupSystem
 
     private InteractableObject currentTarget;
-    private Camera cam;
-
-    void Start()
-    {
-        cam = GetComponent<Camera>();
-        if (promptUI != null) promptUI.SetActive(false);
-    }
 
     void Update()
     {
-        DetectInteractable();
+        DetectTarget();
 
         if (currentTarget != null && currentTarget.CanInteract())
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
+            if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
                 currentTarget.Interact();
-            }
         }
     }
 
-    void DetectInteractable()
+    void DetectTarget()
     {
-        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, interactRange, interactableLayer))
+        // 拿着东西时 PickupSystem 优先，PlayerInteract 完全不插手
+        if (pickupSystem != null && pickupSystem.IsHoldingItem)
         {
-            InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
+            currentTarget = null;
+            return;
+        }
 
+        Ray ray = new Ray(transform.position, transform.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayer))
+        {
+            var interactable = hit.collider.GetComponent<InteractableObject>();
             if (interactable != null)
             {
                 currentTarget = interactable;
@@ -51,24 +49,21 @@ public class PlayerInteract : MonoBehaviour
             }
         }
 
-        // 没有命中
         currentTarget = null;
         HidePrompt();
     }
 
     void ShowPrompt(string text, bool canInteract)
     {
-        if (promptUI != null) promptUI.SetActive(true);
-        if (promptText != null)
-        {
-            promptText.text = text;
-            // 动画播放中可以变灰提示不可按
-            promptText.color = canInteract ? Color.white : Color.gray;
-        }
+        if (interactPromptText == null) return;
+        interactPromptText.text = text;
+        interactPromptText.color = canInteract ? Color.white : Color.gray;
+        interactPromptText.enabled = true;
     }
 
     void HidePrompt()
     {
-        if (promptUI != null) promptUI.SetActive(false);
+        if (interactPromptText == null) return;
+        interactPromptText.enabled = false;
     }
 }

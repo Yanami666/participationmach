@@ -4,69 +4,72 @@ using UnityEngine;
 
 public class InteractableObject : MonoBehaviour
 {
-    [Header("Animation Settings")]
+    [Header("== 动画设置 ==")]
     public Animator animator;
-    public List<string> animationTriggers; // 按顺序触发的动画 Trigger 名
-    public bool loopAnimations = true;     // 播完最后一个是否循环回第一个
 
-    [Header("Toggle Objects")]
-    public List<GameObject> objectsToToggle; // 按E时 active/inactive 的物体
+    [Tooltip("按顺序填写 Animator 里每个状态的名字（State Name，不是Trigger名）")]
+    public List<string> animationStateNames; // 例如："Test interact", "Test interact222"
 
-    [Header("Interaction Settings")]
-    public string interactPrompt = "按 E 互动"; // UI显示文字
-    public bool waitForAnimationToFinish = true; // 动画播完才能再按
+    [Header("== Toggle物体设置 ==")]
+    [Tooltip("按E时要显示/隐藏的物体，不填就不toggle")]
+    public List<GameObject> objectsToToggle;
 
-    private int currentAnimIndex = 0;
-    private bool isPlayingAnimation = false;
+    [Header("== 互动设置 ==")]
+    public string interactPrompt = "[E] 互动";
+    public bool waitForAnimFinish = true;
+    public bool loopBack = true; // 播完最后一个是否回到第一个
 
+    // 内部状态
+    private int currentIndex = 0;
+    private bool isPlaying = false;
+
+    public bool CanInteract() => !isPlaying;
     public string GetPrompt() => interactPrompt;
-
-    public bool CanInteract() => !isPlayingAnimation;
 
     public void Interact()
     {
-        if (isPlayingAnimation) return;
+        if (isPlaying) return;
+        if (animationStateNames == null || animationStateNames.Count == 0) return;
 
-        // 播放动画
-        if (animator != null && animationTriggers != null && animationTriggers.Count > 0)
-        {
-            string triggerName = animationTriggers[currentAnimIndex];
-            animator.SetTrigger(triggerName);
+        string stateName = animationStateNames[currentIndex];
 
-            if (waitForAnimationToFinish)
-                StartCoroutine(WaitForAnimation(triggerName));
+        // 直接播放对应状态
+        animator.Play(stateName, 0, 0f);
 
-            // 推进到下一个动画
-            currentAnimIndex++;
-            if (currentAnimIndex >= animationTriggers.Count)
-                currentAnimIndex = loopAnimations ? 0 : animationTriggers.Count - 1;
-        }
+        if (waitForAnimFinish)
+            StartCoroutine(WaitForAnimationEnd(stateName));
+        else
+            AdvanceIndex();
 
         // Toggle 物体
-        foreach (GameObject obj in objectsToToggle)
-        {
-            if (obj != null)
-                obj.SetActive(!obj.activeSelf);
-        }
+        foreach (var obj in objectsToToggle)
+            if (obj != null) obj.SetActive(!obj.activeSelf);
     }
 
-    private IEnumerator WaitForAnimation(string triggerName)
+    private IEnumerator WaitForAnimationEnd(string stateName)
     {
-        isPlayingAnimation = true;
+        isPlaying = true;
 
-        // 等一帧让 Animator 状态切换
+        // 等一帧，让 Animator 切换状态
+        yield return null;
         yield return null;
 
-        // 等待动画开始播放
+        // 等待进入目标状态
         yield return new WaitUntil(() =>
-            animator.GetCurrentAnimatorStateInfo(0).IsName(triggerName) ||
-            animator.IsInTransition(0));
+            animator.GetCurrentAnimatorStateInfo(0).IsName(stateName));
 
-        // 等待动画播完（包括 transition）
+        // 等待播放完毕（normalizedTime >= 1）
         yield return new WaitUntil(() =>
-            !animator.IsInTransition(0) &&
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
-        isPlayingAnimation = false;
+        isPlaying = false;
+        AdvanceIndex();
+    }
+
+    private void AdvanceIndex()
+    {
+        currentIndex++;
+        if (currentIndex >= animationStateNames.Count)
+            currentIndex = loopBack ? 0 : animationStateNames.Count - 1;
     }
 }

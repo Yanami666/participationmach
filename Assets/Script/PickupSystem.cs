@@ -42,6 +42,10 @@ public class PickupSystem : UnityEngine.MonoBehaviour
     [Header("Input / 输入")]
     [SerializeField] private InputActionAsset inputActions;
 
+    [Header("Interact Settings / 互动设置")]
+    [SerializeField] private float animInteractRange = 3f;
+    [SerializeField] private UnityEngine.LayerMask animInteractableLayer = ~0;
+
     private InputAction _pickupAction;
     private InputAction _throwAction;
 
@@ -50,6 +54,9 @@ public class PickupSystem : UnityEngine.MonoBehaviour
     private bool _canPlace = false;
     private RaycastHit _placeHit;
     private bool _handModeActive = true;
+
+    // 互动系统
+    private InteractableObject _currentInteractTarget = null;
 
     private void Awake()
     {
@@ -116,6 +123,7 @@ public class PickupSystem : UnityEngine.MonoBehaviour
     private void Update()
     {
         UpdateRaycast();
+        UpdateAnimInteract(); // 新增
         UpdateCrosshairUI();
         HandleInput();
     }
@@ -138,6 +146,44 @@ public class PickupSystem : UnityEngine.MonoBehaviour
                 else DropItem(isThrow: true);
             }
         }
+
+        // 按E触发互动（没有拿东西时才检测）
+        if (_heldItem == null && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+        {
+            if (_currentInteractTarget != null && _currentInteractTarget.CanInteract())
+                _currentInteractTarget.Interact();
+        }
+    }
+
+    // 新增：互动物体的raycast检测
+    private void UpdateAnimInteract()
+    {
+        // 拿着东西时不检测互动
+        if (_heldItem != null)
+        {
+            _currentInteractTarget = null;
+            return;
+        }
+
+        if (playerCamera == null) return;
+
+        Ray ray = new Ray(playerCamera.position, playerCamera.forward);
+
+        if (UnityEngine.Physics.Raycast(ray, out RaycastHit hit, animInteractRange, animInteractableLayer,
+                                        QueryTriggerInteraction.Ignore))
+        {
+            var interactable = hit.collider.GetComponent<InteractableObject>();
+            if (interactable != null)
+            {
+                _currentInteractTarget = interactable;
+                // 只有在 PickupSystem 没有显示自己的提示时才显示互动提示
+                if (_lookedAtItem == null)
+                    ShowPrompt(interactable.GetPrompt(), interactable.CanInteract());
+                return;
+            }
+        }
+
+        _currentInteractTarget = null;
     }
 
     private void UpdateRaycast()
@@ -243,10 +289,11 @@ public class PickupSystem : UnityEngine.MonoBehaviour
         crosshairImage.rectTransform.localScale = UnityEngine.Vector3.one * newScale;
     }
 
-    public void ShowPrompt(string message)
+    public void ShowPrompt(string message, bool canInteract = true)
     {
         if (interactPromptText == null) return;
         interactPromptText.text = message;
+        interactPromptText.color = canInteract ? UnityEngine.Color.white : UnityEngine.Color.gray;
         interactPromptText.enabled = true;
     }
 

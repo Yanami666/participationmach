@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0a5adda5534c55144aa9c33973131f46
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 197480
+  packageName: Floating dust particles Effect VFX Particle System
+  packageVersion: 1.0
+  assetPath: Assets/Floating Dust Particles/Materials/Dust_Mat.mat
+  uploadId: 439842

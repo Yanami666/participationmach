@@ -7,7 +7,8 @@ public class ReadableItem : UnityEngine.MonoBehaviour
     public Sprite infoSprite;
 
     [Header("Audio (可选，打开时播放)")]
-    public UnityEngine.AudioClip openAudioClip;
+    public AudioSource openAudioSource;
+
     [TextArea(2, 4)]
     public string openSubtitleText = "";
     public float openSubtitleDuration = 3f;
@@ -27,15 +28,24 @@ public class ReadableItem : UnityEngine.MonoBehaviour
         _panelOpen = true;
 
         // 播放音频/字幕（如果有）
-        if (openAudioClip != null || !string.IsNullOrEmpty(openSubtitleText))
+        bool hasAudio = openAudioSource != null && openAudioSource.clip != null;
+        bool hasSubtitle = !string.IsNullOrEmpty(openSubtitleText);
+
+        if (hasAudio || hasSubtitle)
         {
-            var clip = new NarrativeClip
+            if (hasAudio)
+                openAudioSource.Play();
+
+            if (hasSubtitle)
             {
-                audioClip = openAudioClip,
-                subtitleText = openSubtitleText,
-                subtitleDuration = openSubtitleDuration
-            };
-            NarrativeManager.Instance?.TryPlay(clip);
+                var clip = new NarrativeClip
+                {
+                    audioClip = null,
+                    subtitleText = openSubtitleText,
+                    subtitleDuration = openSubtitleDuration
+                };
+                NarrativeManager.Instance?.TryPlay(clip);
+            }
         }
     }
 

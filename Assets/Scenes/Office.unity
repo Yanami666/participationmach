@@ -2902,6 +2902,7 @@ MonoBehaviour:
   - DoorRotation_Back
   - DoorRotation
   objectsToToggle: []
+  interactAudioSource: {fileID: 0}
   interactPrompt: "[E] \u4E92\u52A8"
   waitForAnimFinish: 1
   loopBack: 1
@@ -3277,7 +3278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReadableItem
   infoSprite: {fileID: 21300000, guid: b3e5f94b36c2a4f5f9092360459f9cc8, type: 3}
-  openAudioClip: {fileID: 8300000, guid: 8c545b845547d4c558076df0887341b3, type: 3}
+  openAudioSource: {fileID: 0}
   openSubtitleText: 
   openSubtitleDuration: 3
   infoPanel: {fileID: 452121395}
@@ -6931,6 +6932,7 @@ GameObject:
   - component: {fileID: 840481238}
   - component: {fileID: 840481237}
   - component: {fileID: 840481236}
+  - component: {fileID: 840481239}
   m_Layer: 0
   m_Name: SceneMusic
   m_TagString: Untagged
@@ -7066,6 +7068,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &840481239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840481235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c3e34769ad04906be2fca7321773ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioQueue
 --- !u!65 &847825999
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9104,6 +9118,7 @@ MonoBehaviour:
   - DoorRotation
   - DoorRotation_Back
   objectsToToggle: []
+  interactAudioSource: {fileID: 0}
   interactPrompt: "[E] \u4E92\u52A8"
   waitForAnimFinish: 1
   loopBack: 1

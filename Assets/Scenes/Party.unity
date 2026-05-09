@@ -1413,7 +1413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReadableItem
   infoSprite: {fileID: 0}
-  openAudioClip: {fileID: 8300000, guid: b65e2bc226c4843c6ab47e87bb3a4360, type: 3}
+  openAudioSource: {fileID: 0}
   openSubtitleText: 
   openSubtitleDuration: 3
   infoPanel: {fileID: 1215264379}
@@ -7845,6 +7845,7 @@ GameObject:
   - component: {fileID: 2038728573}
   - component: {fileID: 2038728572}
   - component: {fileID: 2038728571}
+  - component: {fileID: 2038728574}
   m_Layer: 0
   m_Name: SceneMusic
   m_TagString: Untagged
@@ -7980,6 +7981,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2038728574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038728570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c3e34769ad04906be2fca7321773ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioQueue
 --- !u!1 &2053544926
 GameObject:
   m_ObjectHideFlags: 0

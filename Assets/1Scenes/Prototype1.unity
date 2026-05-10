@@ -2271,7 +2271,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccdeedfd23ef447a387eb29f98d6273b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  pauseMenuPanel: {fileID: 0}
+  VisitedOffice: 0
+  VisitedParty: 0
+  startSceneName: House
 --- !u!114 &479667882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5490,6 +5492,7 @@ MonoBehaviour:
   - Test interact
   - Test interact222
   objectsToToggle: []
+  interactAudioSource: {fileID: 0}
   interactPrompt: '[E] Interact'
   waitForAnimFinish: 1
   loopBack: 1
@@ -5646,7 +5649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReadableItem
   infoSprite: {fileID: 0}
-  openAudioClip: {fileID: 0}
+  openAudioSource: {fileID: 0}
   openSubtitleText: 
   openSubtitleDuration: 3
   infoPanel: {fileID: 0}
@@ -5783,6 +5786,7 @@ MonoBehaviour:
   targetSceneName: 
   targetPoint: {fileID: 1245436500}
   spawnPointTag: SpawnPoint
+  holdSeconds: 0.2
   showGizmo: 1
 --- !u!1 &985294680
 GameObject:
@@ -7770,6 +7774,7 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 811908895687f461c83c9f72c8e8bcce, type: 3}
     subtitleText: If You See this Text, It is a cube
     subtitleDuration: 3
+    volume: 1
 --- !u!65 &1535325885
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8203,6 +8208,7 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: ddd8765309f104b0c88d2a2cfcb5de7c, type: 3}
     subtitleText: If you see this text, you shouldn't touch it
     subtitleDuration: 3
+    volume: 1
 --- !u!1 &1705478557
 GameObject:
   m_ObjectHideFlags: 0
@@ -9151,9 +9157,7 @@ MonoBehaviour:
     style: 0
   - text: strike
     style: 0
-  strikeReplacements:
-  - text: omg
-    style: 0
+  strikeReplacements: []
   triggerOnce: 1
   gazeHoldTime: 0.5
   gazeRange: 6

@@ -33,6 +33,12 @@ public class NarrativeManager : UnityEngine.MonoBehaviour
     {
         if (clip == null) return;
         if (clip.HasPlayed) return;
+        string key = GameManager.GetClipKey(clip);
+        if (!string.IsNullOrEmpty(key) && GameManager.Instance != null)
+        {
+            if (GameManager.Instance.PlayedClips.Contains(key)) { clip.HasPlayed = true; return; }
+            GameManager.Instance.PlayedClips.Add(key);
+        }
         clip.HasPlayed = true;
         _queue.Enqueue(clip);
         if (!_isPlaying)
@@ -58,6 +64,12 @@ public class NarrativeManager : UnityEngine.MonoBehaviour
     {
         if (clip == null) return;
         if (clip.HasPlayed) return;
+        string key = GameManager.GetClipKey(clip);
+        if (!string.IsNullOrEmpty(key) && GameManager.Instance != null)
+        {
+            if (GameManager.Instance.PlayedClips.Contains(key)) { clip.HasPlayed = true; return; }
+            GameManager.Instance.PlayedClips.Add(key);
+        }
         clip.HasPlayed = true;
         _queue.Enqueue(clip);
         if (!_isPlaying)

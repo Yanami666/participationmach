@@ -10789,6 +10789,51 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &444040054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 444040058}
+  - component: {fileID: 444040055}
+  m_Layer: 0
+  m_Name: tp fromhallway
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &444040055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 444040054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf059a925356a40d78651bea28a09e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneSpawnPoint
+  spawnID: garden_entrance
+--- !u!4 &444040058
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 444040054}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.86, y: 1.59, z: -3.12}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &484755521
 GameObject:
   m_ObjectHideFlags: 0
@@ -24140,7 +24185,6 @@ GameObject:
   - component: {fileID: 1648575250}
   - component: {fileID: 1648575249}
   - component: {fileID: 1648575248}
-  - component: {fileID: 1648575247}
   - component: {fileID: 1648575246}
   - component: {fileID: 1648575245}
   - component: {fileID: 1648575244}
@@ -24288,19 +24332,6 @@ MonoBehaviour:
   highlightScale: 1.15
   animationSpeed: 12
   inputActions: {fileID: -944628639613478452, guid: 7754895374f41407dae5dc041412f66b, type: 3}
---- !u!114 &1648575247
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1648575241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccdeedfd23ef447a387eb29f98d6273b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  pauseMenuPanel: {fileID: 0}
 --- !u!114 &1648575248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30682,7 +30713,6 @@ GameObject:
   - component: {fileID: 1996625915}
   - component: {fileID: 1996625914}
   - component: {fileID: 1996625913}
-  - component: {fileID: 1996625912}
   m_Layer: 0
   m_Name: Player Camera
   m_TagString: MainCamera
@@ -30741,19 +30771,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1996625912
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1996625910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7d8a16a2db374a5395a9d88f04a6601, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ScreenFader
-  fadeSpeed: 1
 --- !u!114 &1996625913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31148,3 +31165,4 @@ SceneRoots:
   - {fileID: 1813912734}
   - {fileID: 712349442}
   - {fileID: 1648575253}
+  - {fileID: 444040058}

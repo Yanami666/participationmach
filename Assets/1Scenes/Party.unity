@@ -3237,6 +3237,7 @@ MonoBehaviour:
   spawnID: from_party
   markVisited: Party
   holdSeconds: 0.2
+  triggerOnce: 0
   showGizmo: 1
 --- !u!65 &729841996
 BoxCollider:
@@ -4140,7 +4141,6 @@ GameObject:
   - component: {fileID: 1075417823}
   - component: {fileID: 1075417822}
   - component: {fileID: 1075417821}
-  - component: {fileID: 1075417820}
   m_Layer: 0
   m_Name: Player Camera
   m_TagString: MainCamera
@@ -4199,19 +4199,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1075417820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1075417818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7d8a16a2db374a5395a9d88f04a6601, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ScreenFader
-  fadeSpeed: 1
 --- !u!114 &1075417821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6107,6 +6094,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
   m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_ActionId: 3c7022bf-7922-4f7c-a998-c437916075ad
+--- !u!1 &1668871253
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1668871255}
+  - component: {fileID: 1668871254}
+  m_Layer: 0
+  m_Name: ScreenFade
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1668871254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668871253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d8a16a2db374a5395a9d88f04a6601, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScreenFader
+  fadeSpeed: 1
+--- !u!4 &1668871255
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668871253}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.79171, y: 0.93465, z: -0.48908}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1701489205
 GameObject:
   m_ObjectHideFlags: 0
@@ -6753,12 +6785,12 @@ GameObject:
   - component: {fileID: 1963930576}
   - component: {fileID: 1963930575}
   - component: {fileID: 1963930574}
-  - component: {fileID: 1963930573}
   - component: {fileID: 1963930572}
   - component: {fileID: 1963930571}
   - component: {fileID: 1963930570}
   - component: {fileID: 1963930569}
   - component: {fileID: 1963930568}
+  - component: {fileID: 1963930580}
   m_Layer: 0
   m_Name: Gold Player Controller
   m_TagString: Player
@@ -6901,21 +6933,6 @@ MonoBehaviour:
   highlightScale: 1.15
   animationSpeed: 12
   inputActions: {fileID: -944628639613478452, guid: 7754895374f41407dae5dc041412f66b, type: 3}
---- !u!114 &1963930573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1963930567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccdeedfd23ef447a387eb29f98d6273b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  VisitedOffice: 0
-  VisitedParty: 0
-  startSceneName: House
 --- !u!114 &1963930574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7384,6 +7401,19 @@ Transform:
   - {fileID: 610801159}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1963930580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963930567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf8c90bdebde147e783c43999b926f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScenePlayer
+  sceneName: Party
 --- !u!1 &1980545771 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 327217097828013760, guid: f017708743d444a5fb9cec1a3a396700, type: 3}
@@ -8336,6 +8366,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1905655984}
   - {fileID: 603808251}
+  - {fileID: 1668871255}
   - {fileID: 1373718777}
   - {fileID: 1782636917}
   - {fileID: 1445659702}

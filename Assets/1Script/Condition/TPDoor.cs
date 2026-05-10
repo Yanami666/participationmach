@@ -4,12 +4,15 @@ public class TPDoor : UnityEngine.MonoBehaviour
 {
     [Header("目标设置")]
     public string targetSceneName = "";
-    [Tooltip("目标场景里 SceneSpawnPoint 的 spawnID，留空则玩家落在场景默认位置")]
+    [Tooltip("目标场景里 SceneSpawnPoint 的 spawnID，留空则不指定")]
     public string spawnID = "";
-    [Tooltip("到达目标场景后，标记 GameManager 里哪个 flag（留空则不标记）Office 或 Party")]
+    [Tooltip("Office 或 Party，留空则不标记")]
     public string markVisited = "";
     [Header("黑屏设置")]
     public float holdSeconds = 0.2f;
+    [Header("可重复触发")]
+    public bool triggerOnce = false;
+    private bool _triggered = false;
     [Header("条件")]
     private int _totalConditions = 0;
     private int _completedConditions = 0;
@@ -33,6 +36,7 @@ public class TPDoor : UnityEngine.MonoBehaviour
     void OnTriggerEnter(UnityEngine.Collider other)
     {
         if (!other.CompareTag("Player")) return;
+        if (triggerOnce && _triggered) return;
         if (!ConditionsMet())
         {
             UnityEngine.Debug.Log("[TPDoor] 条件未满足，无法传送");
@@ -43,6 +47,7 @@ public class TPDoor : UnityEngine.MonoBehaviour
             UnityEngine.Debug.LogWarning("[TPDoor] 未设置目标场景名！");
             return;
         }
+        _triggered = true;
         if (!string.IsNullOrEmpty(markVisited) && GameManager.Instance != null)
         {
             if (markVisited == "Office") GameManager.Instance.VisitedOffice = true;

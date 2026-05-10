@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 
 public class TitleSceneManager : MonoBehaviour
 {
@@ -17,45 +19,65 @@ public class TitleSceneManager : MonoBehaviour
     public GameObject mainButtonsPanel;
     public GameObject settingsPanel;
 
-    [Header("References")]
-    public TitleCameraController cameraController;
-    public LampDropController lampDrop;
-    public SceneFaderStart fader;
+    [Header("点Start时要隐藏的物体")]
+    public List<GameObject> hideOnStart;
+
+    [Header("Lamp")]
+    public Rigidbody lampRigidbody;
+    public AudioSource audioSource;
+    public AudioClip dropSound;
+    public AudioClip impactSound;
+    public float impactVelocityThreshold = 2f;
 
     [Header("Scene")]
     public string firstGameScene = "House";
+    public float waitBeforeFade = 1.8f;
+
+    [Header("References")]
+    public SceneFaderStart fader;
+    public LampFlicker lampFlicker;
+
+    private bool hasPlayedImpact = false;
 
     void Start()
     {
-        startButton.onClick.AddListener(OnStartClicked);
-        settingsButton.onClick.AddListener(OnSettingsClicked);
-        backButton.onClick.AddListener(OnBackClicked);
-
         settingsPanel.SetActive(false);
         backButton.gameObject.SetActive(false);
     }
 
-    void OnStartClicked()
+    public void OnStartClicked()
     {
         if (currentState != TitleState.Main) return;
         currentState = TitleState.Transitioning;
 
-        mainButtonsPanel.SetActive(false);
-        lampDrop.DropLamp();
+        foreach (var obj in hideOnStart)
+            if (obj != null) obj.SetActive(false);
+
+        if (lampFlicker != null)
+            lampFlicker.StopFlicker();
+
+        if (audioSource != null && dropSound != null)
+            audioSource.PlayOneShot(dropSound);
+
+        if (lampRigidbody != null)
+        {
+            lampRigidbody.isKinematic = false;
+            lampRigidbody.useGravity = true;
+        }
+
         StartCoroutine(StartSequence());
     }
 
-    System.Collections.IEnumerator StartSequence()
+    IEnumerator StartSequence()
     {
-        // 等灯落地（可调）
-        yield return new WaitForSeconds(1.8f);
+        yield return new WaitForSeconds(waitBeforeFade);
         fader.FadeToBlack(() =>
         {
             SceneManager.LoadScene(firstGameScene);
         });
     }
 
-    void OnSettingsClicked()
+    public void OnSettingsClicked()
     {
         if (currentState != TitleState.Main) return;
         currentState = TitleState.Settings;
@@ -63,10 +85,9 @@ public class TitleSceneManager : MonoBehaviour
         mainButtonsPanel.SetActive(false);
         settingsPanel.SetActive(true);
         backButton.gameObject.SetActive(true);
-        cameraController.MoveToSettingsPosition();
     }
 
-    void OnBackClicked()
+    public void OnBackClicked()
     {
         if (currentState != TitleState.Settings) return;
         currentState = TitleState.Main;
@@ -74,6 +95,5 @@ public class TitleSceneManager : MonoBehaviour
         settingsPanel.SetActive(false);
         backButton.gameObject.SetActive(false);
         mainButtonsPanel.SetActive(true);
-        cameraController.MoveToMainPosition();
     }
 }

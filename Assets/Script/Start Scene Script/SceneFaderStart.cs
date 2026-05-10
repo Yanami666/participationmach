@@ -3,24 +3,38 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System;
+using UnityEngine.SceneManagement;
 
 public class SceneFaderStart : MonoBehaviour
 {
     [Header("Fader")]
     public Image blackOverlay;
-    public float fadeOutDuration = 0.5f;   // 开场渐出（黑→透明）
-    public float fadeInDuration = 1.0f;    // 结束渐入（透明→黑）
+    public float fadeOutDuration = 0.5f;
+    public float fadeInDuration = 1.0f;
+
+    [Header("Fade完成后隐藏的物体根节点")]
+    public GameObject[] rootObjectsToHide;
 
     void Start()
     {
-        // 开场：从全黑渐出
         blackOverlay.color = new Color(0, 0, 0, 1);
         StartCoroutine(FadeRoutine(1f, 0f, fadeOutDuration, null));
     }
 
     public void FadeToBlack(Action onComplete)
     {
-        StartCoroutine(FadeRoutine(0f, 1f, fadeInDuration, onComplete));
+        StartCoroutine(FadeRoutine(0f, 1f, fadeInDuration, () =>
+        {
+            HideEverything();
+            onComplete?.Invoke();
+        }));
+    }
+
+    void HideEverything()
+    {
+        // 隐藏Inspector里指定的根节点
+        foreach (var obj in rootObjectsToHide)
+            if (obj != null) obj.SetActive(false);
     }
 
     IEnumerator FadeRoutine(float from, float to, float duration, Action onComplete)

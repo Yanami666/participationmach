@@ -3235,7 +3235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TPDoor
   targetSceneName: House
   spawnID: from_party
-  markVisited: party
+  markVisited: Party
   holdSeconds: 0.2
   showGizmo: 1
 --- !u!65 &729841996

@@ -7997,6 +7997,7 @@ GameObject:
   m_Component:
   - component: {fileID: 409444367}
   - component: {fileID: 409444369}
+  - component: {fileID: 409444370}
   m_Layer: 0
   m_Name: TPtriggertoGarden
   m_TagString: Untagged
@@ -8040,6 +8041,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5828991, y: 1.6464148, z: 0.6506915}
   m_Center: {x: 1.0752125, y: 0.32320738, z: -1.8600376}
+--- !u!114 &409444370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409444366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba1044fcd9f954737bfedff488a08085, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GardenEntrance
+  targetSceneName: Garden
+  holdSeconds: 0.2
+  objectsToActivate: []
 --- !u!1 &414648634
 GameObject:
   m_ObjectHideFlags: 0
@@ -13363,6 +13379,7 @@ GameObject:
   m_Component:
   - component: {fileID: 468691738}
   - component: {fileID: 468691740}
+  - component: {fileID: 468691741}
   m_Layer: 0
   m_Name: TPtriggertoParty
   m_TagString: Untagged
@@ -13406,6 +13423,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5828991, y: 1.6464148, z: 0.6506915}
   m_Center: {x: 1.0752125, y: 0.32320738, z: -1.8600376}
+--- !u!114 &468691741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468691737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f2f6c912843f40a98b17442eb9ba4dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TPAcrossScene
+  targetSceneName: Party
+  holdSeconds: 0.2
+  triggerOnce: 1
 --- !u!1 &473646134 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1168665292692130168, guid: 7f16cf52d108beb4ea7edd6c93972f90, type: 3}
@@ -38494,6 +38526,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1156118534}
   - component: {fileID: 1156118536}
+  - component: {fileID: 1156118537}
   m_Layer: 0
   m_Name: TPtriggertoOffice
   m_TagString: Untagged
@@ -38537,6 +38570,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5828991, y: 1.6464148, z: 0.6506915}
   m_Center: {x: 1.0752125, y: 0.32320738, z: -1.8600376}
+--- !u!114 &1156118537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156118533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f2f6c912843f40a98b17442eb9ba4dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TPAcrossScene
+  targetSceneName: Office
+  holdSeconds: 0.2
+  triggerOnce: 1
 --- !u!1 &1160450399
 GameObject:
   m_ObjectHideFlags: 0

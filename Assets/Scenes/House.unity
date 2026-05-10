@@ -390,6 +390,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.015
       objectReference: {fileID: 0}
+    - target: {fileID: 719033612385279896, guid: 7f16cf52d108beb4ea7edd6c93972f90, type: 3}
+      propertyPath: m_Name
+      value: Fridge1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7f16cf52d108beb4ea7edd6c93972f90, type: 3}
       propertyPath: m_Name
       value: KA-F600_Fridge_V1
@@ -413,6 +417,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 719033612385279896, guid: 7f16cf52d108beb4ea7edd6c93972f90, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1710178174}
+    - targetCorrespondingSourceObject: {fileID: 719033612385279896, guid: 7f16cf52d108beb4ea7edd6c93972f90, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1710178178}
+    - targetCorrespondingSourceObject: {fileID: 719033612385279896, guid: 7f16cf52d108beb4ea7edd6c93972f90, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1710178179}
+    - targetCorrespondingSourceObject: {fileID: 719033612385279896, guid: 7f16cf52d108beb4ea7edd6c93972f90, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1710178180}
   m_SourcePrefab: {fileID: 100100000, guid: 7f16cf52d108beb4ea7edd6c93972f90, type: 3}
 --- !u!4 &7875962 stripped
 Transform:
@@ -21002,7 +21015,7 @@ Transform:
   m_GameObject: {fileID: 720744690}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.68, y: 4.66, z: -2.766}
+  m_LocalPosition: {x: 1.74, y: 12.565, z: -2.766}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -27832,6 +27845,172 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
   m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_ActionId: c95b2375-e6d9-4b88-9c4c-c5e76515df4b
+--- !u!1 &801893629 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -5297426505484731927, guid: 8a95c75a204619245889d53ab3d9befd, type: 3}
+  m_PrefabInstance: {fileID: 1038863189}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &801893633
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801893629}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8f3f002cde7dd4ebba27d19bce91713d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &801893634
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801893629}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 6d2f57cfb0aa149f8900577c238f67f4, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.4
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &801893635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801893629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dbea34cd3867453daeb65b8f7483c4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  animator: {fileID: 801893633}
+  animationStateNames:
+  - Fridge2-op
+  - Fridge2-cl
+  objectsToToggle: []
+  interactAudioSource: {fileID: 801893634}
+  interactPrompt: "[E] \u4E92\u52A8"
+  waitForAnimFinish: 1
+  loopBack: 1
+--- !u!65 &801893636
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801893629}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5950004, y: 1.200001, z: 0.12980266}
+  m_Center: {x: 0.29749984, y: 0.6000012, z: 0.06490082}
 --- !u!1 &802726218
 GameObject:
   m_ObjectHideFlags: 0
@@ -36186,6 +36365,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -43.048
       objectReference: {fileID: 0}
+    - target: {fileID: -5297426505484731927, guid: 8a95c75a204619245889d53ab3d9befd, type: 3}
+      propertyPath: m_Name
+      value: Fridge2
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8a95c75a204619245889d53ab3d9befd, type: 3}
       propertyPath: m_Name
       value: KA-F1000_FridgeSBS_V1
@@ -36202,7 +36385,19 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -5449784996087453356, guid: 8a95c75a204619245889d53ab3d9befd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 417922758}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -5297426505484731927, guid: 8a95c75a204619245889d53ab3d9befd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 801893635}
+    - targetCorrespondingSourceObject: {fileID: -5297426505484731927, guid: 8a95c75a204619245889d53ab3d9befd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 801893634}
+    - targetCorrespondingSourceObject: {fileID: -5297426505484731927, guid: 8a95c75a204619245889d53ab3d9befd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 801893633}
+    - targetCorrespondingSourceObject: {fileID: -5297426505484731927, guid: 8a95c75a204619245889d53ab3d9befd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 801893636}
   m_SourcePrefab: {fileID: 100100000, guid: 8a95c75a204619245889d53ab3d9befd, type: 3}
 --- !u!4 &1038863190 stripped
 Transform:
@@ -53116,7 +53311,6 @@ GameObject:
   - component: {fileID: 1514948693}
   - component: {fileID: 1514948692}
   - component: {fileID: 1514948691}
-  - component: {fileID: 1514948690}
   - component: {fileID: 1514948689}
   m_Layer: 0
   m_Name: Rack 2
@@ -53147,33 +53341,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!54 &1514948690
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1514948687}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &1514948691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53188,11 +53355,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
   animator: {fileID: 1514948689}
   animationStateNames:
+  - Rack 2 2
   - Rack 2
-  - ' Rack 2 2'
-  objectsToToggle:
-  - {fileID: 1514948687}
-  - {fileID: 1514948687}
+  objectsToToggle: []
   interactAudioSource: {fileID: 0}
   interactPrompt: '[E] To Open '
   waitForAnimFinish: 1
@@ -53212,7 +53377,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -57245,6 +57410,146 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.60000014, y: 1.2, z: 0.14813058}
   m_Center: {x: 0.2999997, y: 0.60000026, z: 0.07406572}
+--- !u!95 &1710178178
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710178170}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7d6f9a0a8742a46ed99b582f067553dc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1710178179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710178170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dbea34cd3867453daeb65b8f7483c4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  animator: {fileID: 1710178178}
+  animationStateNames:
+  - Fridge1-op
+  - Fridge1-cl
+  objectsToToggle: []
+  interactAudioSource: {fileID: 1710178180}
+  interactPrompt: "[E] \u4E92\u52A8"
+  waitForAnimFinish: 1
+  loopBack: 1
+--- !u!82 &1710178180
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710178170}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 6d2f57cfb0aa149f8900577c238f67f4, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.4
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &1716931354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65023,7 +65328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 54b107e50acd7e24b96d7de887c68833, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.11629
+      value: 4.185
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 54b107e50acd7e24b96d7de887c68833, type: 3}
       propertyPath: m_LocalPosition.y

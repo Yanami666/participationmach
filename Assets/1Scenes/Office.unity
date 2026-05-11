@@ -10360,7 +10360,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1098277276}
-  - component: {fileID: 1098277275}
   - component: {fileID: 1098277274}
   - component: {fileID: 1098277273}
   m_Layer: 0
@@ -10432,14 +10431,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1098277275
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1098277272}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1098277276
 Transform:
   m_ObjectHideFlags: 0

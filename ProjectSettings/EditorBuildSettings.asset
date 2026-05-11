@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/1Scenes/Garden 1.unity
     guid: 18733f427b44082468b766d2317f17c6
   - enabled: 1
+    path: Assets/1Scenes/end.unity
+    guid: 5d08c6b990109324494aa15db9c020b8
+  - enabled: 1
     path: Assets/1Scenes/Ending.unity
     guid: d6fa9a67e088341219e8ec31513883a1
   - enabled: 0
